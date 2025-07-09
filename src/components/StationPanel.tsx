@@ -77,11 +77,10 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
   }, [selectedStation])
 
   const selectedInfo = contextInfos.find(info => info.line === selectedLine)
-  
+
   return(
     <section className="absolute pointer-events-auto top-0 right-0 h-screen w-[40%] p-3">
-      <div className="w-full h-full bg-white rounded-md text-black">
-        <h1 className="font-bold">{selectedStation}역 도착 정보</h1>
+      <div className="w-full h-full bg-white rounded-md text-black pt-10 border border-gray-200 shadow-xs">
         {selectedInfo && (
           <StationContextInfo
             lineId={selectedInfo.lineId}
