@@ -64,37 +64,37 @@ export default function SubwayMap() {
     const minimapScale = 0.025
 
     const applyTransform = () => {
-    const svg = container.querySelector('svg')
-    const g = svg?.querySelector('#viewport') as SVGGElement
-    const { x, y, scale } = transform.current
+      const svg = container.querySelector('svg')
+      const g = svg?.querySelector('#viewport') as SVGGElement
+      const { x, y, scale } = transform.current
 
-    if (g)
-    g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
+      if (g)
+      g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
 
-    const mini = minimapRef.current
-    const scope = mini?.querySelector('#scope') as HTMLDivElement
-    const miniSvg = mini?.querySelector('svg') as SVGSVGElement
-    const miniG = miniSvg?.querySelector('#viewport') as SVGGElement
+      const mini = minimapRef.current
+      const scope = mini?.querySelector('#scope') as HTMLDivElement
+      const miniSvg = mini?.querySelector('svg') as SVGSVGElement
+      const miniG = miniSvg?.querySelector('#viewport') as SVGGElement
 
-    if (mini && scope && miniSvg && miniG) {
-    const mainW = container.offsetWidth
-    const mainH = container.offsetHeight
+      if (mini && scope && miniSvg && miniG) {
+        const mainW = container.offsetWidth
+        const mainH = container.offsetHeight
 
-    const zoomScale = scale
-    const totalScale = zoomScale * minimapScale
+        const zoomScale = scale
+        const totalScale = zoomScale * minimapScale
 
-    const boxW = mainW * minimapScale / zoomScale
-    const boxH = mainH * minimapScale / zoomScale
-    const boxX = -x * minimapScale / zoomScale
-    const boxY = -y * minimapScale / zoomScale
+        const boxW = mainW * minimapScale / zoomScale
+        const boxH = mainH * minimapScale / zoomScale
+        const boxX = -x * minimapScale / zoomScale
+        const boxY = -y * minimapScale / zoomScale
 
-    Object.assign(scope.style, {
-      width: `${boxW}px`,
-      height: `${boxH}px`,
-      left: `${boxX}px`,
-      top: `${boxY}px`,
-    })
-    }
+        Object.assign(scope.style, {
+          width: `${boxW}px`,
+          height: `${boxH}px`,
+          left: `${boxX}px`,
+          top: `${boxY}px`,
+        })
+      }
     }
 
     container.addEventListener('mousedown', onMouseDown)
@@ -109,6 +109,7 @@ export default function SubwayMap() {
       container.removeEventListener('wheel', onWheel)
     }
   }, [svgContent])
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -124,36 +125,34 @@ export default function SubwayMap() {
       const content = text.textContent?.trim()
       if (!matrixMatch || !content) return
 
+      const hasTspan = text.querySelectorAll('tspan').length > 0
+
+      // 나머지 파싱
       const [a, b, c, d, x, y] = matrixMatch[0]
         .replace('matrix(', '')
         .replace(')', '')
         .split(/[\s,]+/)
         .map(Number)
 
-      const fontSize = parseFloat(window.getComputedStyle(text).fontSize || '20')
-      const textLength = (text as SVGTextElement).getComputedTextLength()
+      // BBox 기반 크기 측정
+      const bbox = (text as SVGGElement).getBBox()
+      const rx = bbox.width / 2 * 1.2
+      const ry = bbox.height / 2 * 1.1
 
       const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
-
       ellipse.setAttribute('cx', '0')
       ellipse.setAttribute('cy', '0')
+      ellipse.setAttribute('rx', rx.toString())
+      ellipse.setAttribute('ry', ry.toString())
 
-      // 길이와 높이
-      ellipse.setAttribute('rx', (textLength * 0.6).toString())
-      ellipse.setAttribute('ry', (fontSize * 0.7).toString()) // 약간 크게 보정
-
-      // 🔥 중심 기준으로 위로 ry만큼, 오른쪽으로 rx만큼 이동한 새 transform
-      const correctedX = x + fontSize / 2.5
-      const correctedY = y - fontSize * 1.1
-
-      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${correctedX} ${correctedY})`
+      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${x + rx} ${y - ry})`
       ellipse.setAttribute('transform', correctedMatrix)
 
       ellipse.setAttribute('fill', 'transparent')
       ellipse.setAttribute('class', 'pointer-events-auto')
       ellipse.style.cursor = 'pointer'
       ellipse.addEventListener('click', () => {
-        console.log(`${content} clicked`)
+        console.log(`${content} clicked (tspan: ${hasTspan})`)
       })
 
       text.parentNode?.appendChild(ellipse)
