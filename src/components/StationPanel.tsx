@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import subwayData from '@/data/subway_by_line.json' assert { type: "json" }
 import StationContextInfo from "./StationContextInfo"
+import { lineMeta } from "@/data/lineMeta"
 
 type StationInfo = {
   SUBWAY_ID: number
@@ -81,6 +82,23 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
   return(
     <section className="absolute pointer-events-auto top-0 right-0 h-screen w-[40%] p-3">
       <div className="w-full h-full bg-white rounded-md text-black pt-10 border border-gray-200 shadow-xs">
+        <div className="w-full flex justify-center gap-2 mb-2">
+          {contextInfos
+            .filter(info => info.line !== selectedLine)
+            .map(info => {
+              const color = lineMeta[info.lineId].lineColor
+              return (
+                <button
+                  key={info.line}
+                  onClick={() => setSelectedLine(info.line)}
+                  className="px-3 py-1 text-lg rounded-full text-white font-bold"
+                  style={{ backgroundColor: color }}
+                >
+                  {lineMeta[info.lineId].lineNumber}
+                </button>
+              )
+            })}
+        </div>
         {selectedInfo && (
           <StationContextInfo
             lineId={selectedInfo.lineId}
