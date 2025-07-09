@@ -18,7 +18,6 @@ export default function SubwayMap({ onStationClick }: Props) {
     scale: 0.6,
   })
 
-  // 최신 콜백 ref 유지
   useEffect(() => {
     stationClickRef.current = onStationClick
   }, [onStationClick])
@@ -158,7 +157,6 @@ export default function SubwayMap({ onStationClick }: Props) {
     const svg = container.querySelector('svg')
     if (!svg) return
 
-    // 기존 ellipse 제거
     svg.querySelectorAll('ellipse[data-station-overlay]').forEach(el => el.remove())
 
     const texts = svg.querySelectorAll('text')
