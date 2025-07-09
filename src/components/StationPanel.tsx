@@ -21,16 +21,28 @@ type Props = {
 const API_KEY = process.env.NEXT_PUBLIC_SEOUL_SUBWAY_API_KEY
 export default function StationPanel({ selectedStation, onClose }: Props) {
   useEffect(() => {
-    const matchingIds: number[] = []
     const normalizedStation = selectedStation.replace(/\s+/g, '')
 
-    for (const line in subwayData) {
-      typedData[line].forEach( station => {
-        if (station.STATN_NM === normalizedStation) {
-          matchingIds.push(station.SUBWAY_ID)
-        }
-      })
-    }
+    const result = Object.entries(typedData).map(([line, stations]) => {
+      const index = stations.findIndex(
+        station => station.STATN_NM.replace(/\s+/g, '') === normalizedStation
+      )
+
+      if (index === -1) return null
+
+      const prev = stations[index - 1]?.STATN_NM || null
+      const next = stations[index + 1]?.STATN_NM || null
+
+      return {
+        line,
+        prev,
+        current: stations[index].STATN_NM,
+        next,
+      }
+    }).filter(Boolean)
+
+    console.log(`[${selectedStation}] 전후역 정보 ↓`)
+    console.table(result)
 
     const fetchArrivalData = async () => {
       try {
@@ -48,7 +60,6 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
 
     fetchArrivalData()
     
-    console.log(`${selectedStation}역의 SUBWAY_ID 목록:`, matchingIds)
   }, [selectedStation])
   return(
     <section className="absolute pointer-events-auto top-0 right-0 h-screen w-[40%] p-3">
