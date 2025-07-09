@@ -2,10 +2,26 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export default function SubwayMap() {
+type Props = {
+  onStationClick: (station: string) => void
+}
+
+export default function SubwayMap({ onStationClick }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const minimapRef = useRef<HTMLDivElement>(null)
+  const stationClickRef = useRef(onStationClick)
   const [svgContent, setSvgContent] = useState('')
+
+  const transform = useRef({
+    x: 0,
+    y: 0,
+    scale: 0.6,
+  })
+
+  // 최신 콜백 ref 유지
+  useEffect(() => {
+    stationClickRef.current = onStationClick
+  }, [onStationClick])
 
   const applyTransform = () => {
     const container = containerRef.current
@@ -13,8 +29,7 @@ export default function SubwayMap() {
     const g = svg?.querySelector('#viewport') as SVGGElement
     const { x, y, scale } = transform.current
 
-    if (g)
-      g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
+    if (g) g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
 
     const mini = minimapRef.current
     const scope = mini?.querySelector('#scope') as HTMLDivElement
@@ -28,30 +43,18 @@ export default function SubwayMap() {
       const zoomScale = scale
       const minimapScale = 0.025
 
-      const boxW = mainW * minimapScale / zoomScale
-      const boxH = mainH * minimapScale / zoomScale
-      const boxX = -x * minimapScale / zoomScale
-      const boxY = -y * minimapScale / zoomScale
-
       Object.assign(scope.style, {
-        width: `${boxW}px`,
-        height: `${boxH}px`,
-        left: `${boxX}px`,
-        top: `${boxY}px`,
+        width: `${(mainW * minimapScale) / zoomScale}px`,
+        height: `${(mainH * minimapScale) / zoomScale}px`,
+        left: `${(-transform.current.x * minimapScale) / zoomScale}px`,
+        top: `${(-transform.current.y * minimapScale) / zoomScale}px`,
       })
     }
   }
 
-  const transform = useRef({
-    x: 0,
-    y: 0,
-    scale: 0.6,
-  })
-
   const animateTo = (targetX: number, targetY: number, targetScale: number) => {
-    const duration = 500 // milliseconds
+    const duration = 500
     const start = performance.now()
-
     const { x: startX, y: startY, scale: startScale } = transform.current
 
     const animate = (now: number) => {
@@ -63,7 +66,6 @@ export default function SubwayMap() {
       transform.current.scale = startScale + (targetScale - startScale) * ease
 
       applyTransform()
-
       if (t < 1) requestAnimationFrame(animate)
     }
 
@@ -86,10 +88,8 @@ export default function SubwayMap() {
     if (!container) return
 
     requestAnimationFrame(() => {
-      const container = containerRef.current
-      const svg = container?.querySelector('svg') as SVGSVGElement
-
-      if (!container || !svg) return
+      const svg = container.querySelector('svg') as SVGSVGElement
+      if (!svg) return
 
       const viewBox = svg.getAttribute('viewBox')?.split(' ').map(Number)
       if (!viewBox || viewBox.length !== 4) return
@@ -138,7 +138,6 @@ export default function SubwayMap() {
       applyTransform()
     }
 
-
     container.addEventListener('mousedown', onMouseDown)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
@@ -158,6 +157,9 @@ export default function SubwayMap() {
 
     const svg = container.querySelector('svg')
     if (!svg) return
+
+    // 기존 ellipse 제거
+    svg.querySelectorAll('ellipse[data-station-overlay]').forEach(el => el.remove())
 
     const texts = svg.querySelectorAll('text')
 
@@ -180,51 +182,46 @@ export default function SubwayMap() {
       const ry = bbox.height / 2 * 1.5
 
       const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
+      ellipse.setAttribute('data-station-overlay', 'true')
       ellipse.setAttribute('cx', '0')
       ellipse.setAttribute('cy', '0')
       ellipse.setAttribute('rx', rx.toString())
       ellipse.setAttribute('ry', ry.toString())
 
-      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${x + rx/2} ${hasTspan ? y-ry/2 : y-ry})`
+      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${x + rx / 2} ${hasTspan ? y - ry / 2 : y - ry})`
       ellipse.setAttribute('transform', correctedMatrix)
 
       ellipse.setAttribute('fill', 'transparent')
       ellipse.setAttribute('class', 'pointer-events-auto')
       ellipse.style.cursor = 'pointer'
+
       ellipse.addEventListener('click', () => {
-        console.log(`${content} clicked (tspan: ${hasTspan})`)
-
-        const container = containerRef.current
-        if (!container) return
-
         const containerWidth = container.offsetWidth
         const containerHeight = container.offsetHeight
-
         const targetScale = 0.8
-
+        
+        const viewRatio = 0.6 // 왼쪽 영역 비율
         const centerX = x + rx / 2
         const centerY = hasTspan ? y - ry / 2 : y - ry
 
-        const targetX = containerWidth / 2 - centerX * targetScale
+        const targetX = (containerWidth * viewRatio) / 2 - centerX * targetScale
         const targetY = containerHeight / 2 - centerY * targetScale
 
         animateTo(targetX, targetY, targetScale)
+        stationClickRef.current(content)
       })
 
       text.parentNode?.appendChild(ellipse)
     })
-  }, [svgContent])
+  }, [svgContent, containerRef.current?.innerHTML])
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-white">
-      {/* 메인 SVG */}
       <div
         ref={containerRef}
         className="w-full h-full cursor-grab"
         dangerouslySetInnerHTML={{ __html: svgContent }}
       />
-
-      {/* 미니맵 */}
       <div
         ref={minimapRef}
         className="absolute bottom-4 right-4 w-40 h-40 border border-black bg-white shadow-md overflow-hidden"
