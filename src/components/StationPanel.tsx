@@ -72,7 +72,7 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
       }
     }
 
-    fetchArrivalData()
+    // fetchArrivalData()
     
   }, [selectedStation])
 
