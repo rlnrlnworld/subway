@@ -109,6 +109,56 @@ export default function SubwayMap() {
       container.removeEventListener('wheel', onWheel)
     }
   }, [svgContent])
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const svg = container.querySelector('svg')
+    if (!svg) return
+
+    const texts = svg.querySelectorAll('text')
+
+    texts.forEach(text => {
+      const matrixRaw = text.getAttribute('transform')
+      const matrixMatch = matrixRaw?.match(/matrix\([^\)]+\)/)
+      const content = text.textContent?.trim()
+      if (!matrixMatch || !content) return
+
+      const [a, b, c, d, x, y] = matrixMatch[0]
+        .replace('matrix(', '')
+        .replace(')', '')
+        .split(/[\s,]+/)
+        .map(Number)
+
+      const fontSize = parseFloat(window.getComputedStyle(text).fontSize || '20')
+      const textLength = (text as SVGTextElement).getComputedTextLength()
+
+      const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
+
+      ellipse.setAttribute('cx', '0')
+      ellipse.setAttribute('cy', '0')
+
+      // 길이와 높이
+      ellipse.setAttribute('rx', (textLength * 0.6).toString())
+      ellipse.setAttribute('ry', (fontSize * 0.7).toString()) // 약간 크게 보정
+
+      // 🔥 중심 기준으로 위로 ry만큼, 오른쪽으로 rx만큼 이동한 새 transform
+      const correctedX = x + fontSize / 2.5
+      const correctedY = y - fontSize * 1.1
+
+      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${correctedX} ${correctedY})`
+      ellipse.setAttribute('transform', correctedMatrix)
+
+      ellipse.setAttribute('fill', 'transparent')
+      ellipse.setAttribute('class', 'pointer-events-auto')
+      ellipse.style.cursor = 'pointer'
+      ellipse.addEventListener('click', () => {
+        console.log(`${content} clicked`)
+      })
+
+      text.parentNode?.appendChild(ellipse)
+    })
+  }, [svgContent])
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-white">
@@ -126,7 +176,7 @@ export default function SubwayMap() {
       >
         <div className="relative w-full h-full overflow-hidden">
           <div
-            className="absolute top-0left-0 origin-top-left scale-[0.025]"
+            className="absolute top-0 left-0 origin-top-left scale-[0.025]"
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />
           <div
