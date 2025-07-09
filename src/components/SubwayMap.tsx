@@ -7,11 +7,68 @@ export default function SubwayMap() {
   const minimapRef = useRef<HTMLDivElement>(null)
   const [svgContent, setSvgContent] = useState('')
 
+  const applyTransform = () => {
+    const container = containerRef.current
+    const svg = container?.querySelector('svg')
+    const g = svg?.querySelector('#viewport') as SVGGElement
+    const { x, y, scale } = transform.current
+
+    if (g)
+      g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
+
+    const mini = minimapRef.current
+    const scope = mini?.querySelector('#scope') as HTMLDivElement
+    const miniSvg = mini?.querySelector('svg') as SVGSVGElement
+    const miniG = miniSvg?.querySelector('#viewport') as SVGGElement
+
+    if (mini && scope && miniSvg && miniG && container) {
+      const mainW = container.offsetWidth
+      const mainH = container.offsetHeight
+
+      const zoomScale = scale
+      const minimapScale = 0.025
+
+      const boxW = mainW * minimapScale / zoomScale
+      const boxH = mainH * minimapScale / zoomScale
+      const boxX = -x * minimapScale / zoomScale
+      const boxY = -y * minimapScale / zoomScale
+
+      Object.assign(scope.style, {
+        width: `${boxW}px`,
+        height: `${boxH}px`,
+        left: `${boxX}px`,
+        top: `${boxY}px`,
+      })
+    }
+  }
+
   const transform = useRef({
     x: 0,
     y: 0,
-    scale: 1,
+    scale: 0.6,
   })
+
+  const animateTo = (targetX: number, targetY: number, targetScale: number) => {
+    const duration = 500 // milliseconds
+    const start = performance.now()
+
+    const { x: startX, y: startY, scale: startScale } = transform.current
+
+    const animate = (now: number) => {
+      const t = Math.min((now - start) / duration, 1)
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+
+      transform.current.x = startX + (targetX - startX) * ease
+      transform.current.y = startY + (targetY - startY) * ease
+      transform.current.scale = startScale + (targetScale - startScale) * ease
+
+      applyTransform()
+
+      if (t < 1) requestAnimationFrame(animate)
+    }
+
+    requestAnimationFrame(animate)
+  }
 
   useEffect(() => {
     fetch('/Seoul_subway_linemap_ko.svg')
@@ -27,6 +84,26 @@ export default function SubwayMap() {
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+
+    requestAnimationFrame(() => {
+      const container = containerRef.current
+      const svg = container?.querySelector('svg') as SVGSVGElement
+
+      if (!container || !svg) return
+
+      const viewBox = svg.getAttribute('viewBox')?.split(' ').map(Number)
+      if (!viewBox || viewBox.length !== 4) return
+
+      const [, , svgWidth, svgHeight] = viewBox
+      const containerWidth = container.offsetWidth
+      const containerHeight = container.offsetHeight
+      const scale = transform.current.scale
+
+      transform.current.x = (containerWidth - svgWidth * scale) / 2
+      transform.current.y = (containerHeight - svgHeight * scale) / 2
+
+      applyTransform()
+    })
 
     let isDragging = false
     let startX = 0
@@ -61,41 +138,6 @@ export default function SubwayMap() {
       applyTransform()
     }
 
-    const minimapScale = 0.025
-
-    const applyTransform = () => {
-      const svg = container.querySelector('svg')
-      const g = svg?.querySelector('#viewport') as SVGGElement
-      const { x, y, scale } = transform.current
-
-      if (g)
-      g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`)
-
-      const mini = minimapRef.current
-      const scope = mini?.querySelector('#scope') as HTMLDivElement
-      const miniSvg = mini?.querySelector('svg') as SVGSVGElement
-      const miniG = miniSvg?.querySelector('#viewport') as SVGGElement
-
-      if (mini && scope && miniSvg && miniG) {
-        const mainW = container.offsetWidth
-        const mainH = container.offsetHeight
-
-        const zoomScale = scale
-        const totalScale = zoomScale * minimapScale
-
-        const boxW = mainW * minimapScale / zoomScale
-        const boxH = mainH * minimapScale / zoomScale
-        const boxX = -x * minimapScale / zoomScale
-        const boxY = -y * minimapScale / zoomScale
-
-        Object.assign(scope.style, {
-          width: `${boxW}px`,
-          height: `${boxH}px`,
-          left: `${boxX}px`,
-          top: `${boxY}px`,
-        })
-      }
-    }
 
     container.addEventListener('mousedown', onMouseDown)
     window.addEventListener('mousemove', onMouseMove)
@@ -127,17 +169,15 @@ export default function SubwayMap() {
 
       const hasTspan = text.querySelectorAll('tspan').length > 0
 
-      // 나머지 파싱
       const [a, b, c, d, x, y] = matrixMatch[0]
         .replace('matrix(', '')
         .replace(')', '')
         .split(/[\s,]+/)
         .map(Number)
 
-      // BBox 기반 크기 측정
       const bbox = (text as SVGGElement).getBBox()
-      const rx = bbox.width / 2 * 1.2
-      const ry = bbox.height / 2 * 1.1
+      const rx = bbox.width / 2 * 1.5
+      const ry = bbox.height / 2 * 1.5
 
       const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
       ellipse.setAttribute('cx', '0')
@@ -145,7 +185,7 @@ export default function SubwayMap() {
       ellipse.setAttribute('rx', rx.toString())
       ellipse.setAttribute('ry', ry.toString())
 
-      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${x + rx} ${y - ry})`
+      const correctedMatrix = `matrix(${a} ${b} ${c} ${d} ${x + rx/2} ${hasTspan ? y-ry/2 : y-ry})`
       ellipse.setAttribute('transform', correctedMatrix)
 
       ellipse.setAttribute('fill', 'transparent')
@@ -153,6 +193,22 @@ export default function SubwayMap() {
       ellipse.style.cursor = 'pointer'
       ellipse.addEventListener('click', () => {
         console.log(`${content} clicked (tspan: ${hasTspan})`)
+
+        const container = containerRef.current
+        if (!container) return
+
+        const containerWidth = container.offsetWidth
+        const containerHeight = container.offsetHeight
+
+        const targetScale = 0.8
+
+        const centerX = x + rx / 2
+        const centerY = hasTspan ? y - ry / 2 : y - ry
+
+        const targetX = containerWidth / 2 - centerX * targetScale
+        const targetY = containerHeight / 2 - centerY * targetScale
+
+        animateTo(targetX, targetY, targetScale)
       })
 
       text.parentNode?.appendChild(ellipse)
