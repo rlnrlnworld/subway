@@ -14,4 +14,5 @@ export const lineMeta: Record<number, { lineColor: string; lineNumber: string }>
   1075: { lineColor: "#F5A200", lineNumber: "수인분당" },
   1077: { lineColor: "#D4003B", lineNumber: "신분당" },
   1065: { lineColor: "#0065B3", lineNumber: "공항" },
+  1094: { lineColor: "#6789CA", lineNumber: "신림"}
 }

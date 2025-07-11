@@ -37,7 +37,7 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
 
     const result = Object.entries(typedData).map(([line, stations]) => {
       const index = stations.findIndex(
-        station => station.STATN_NM.replace(/\s+/g, '') === normalizedStation
+        station => station.STATN_NM.replace(/\(.*?\)/g, '').replace(/\s+/g, '') === normalizedStation
       )
 
       if (index === -1) return null
@@ -73,7 +73,7 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
       }
     }
 
-    // fetchArrivalData()
+    fetchArrivalData()
     
   }, [selectedStation])
 
@@ -86,6 +86,7 @@ export default function StationPanel({ selectedStation, onClose }: Props) {
           {contextInfos
             .filter(info => info.line !== selectedLine)
             .map(info => {
+              console.log(lineMeta[info.lineId])
               const color = lineMeta[info.lineId].lineColor
               return (
                 <button

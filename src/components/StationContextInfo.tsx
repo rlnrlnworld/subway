@@ -33,7 +33,7 @@ export default function StationContextInfo({ lineId, prev, current, next }: Prop
       ? 28
       : current.length <= 6
       ? 23
-      : 20
+      : 16
 
   return (
     <div className="w-full relative">
