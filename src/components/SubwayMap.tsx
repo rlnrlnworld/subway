@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -55,6 +55,79 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '4호선:불암산(당고개):1': {
     x: 1076.3,
     pathDown: 'M 1076.3 164.6 H 1012.1',
+  },
+  '2호선:까치산:5': {
+    y: 467.1,
+    pathUp: 'M 353.3 497.8 h -2.4 c -11 0 -20 -9 -20 -20 v -10.8',
+  },
+  '5호선:김포공항:3': {
+    y: 254.4,
+    pathDown: 'M 271.9 254.4 v 63.5',
+  },
+  '5호선:송정:4': {
+    pathUp: 'M 271.9 254.4 v 63.5',
+  },
+  '5호선:영등포시장:15': {
+    pathDown: 'M 482.3 481.4 c 11 11 22 24.5 33.8 24.5',
+  },
+  '5호선:신길:16': {
+    y: 505.9,
+    pathUp: 'M 482.3 481.4 c 11 11 22 24.5 33.8 24.5',
+    pathDown: 'M 516.1 505.9 c 11.8 0 22.8 -16.8 22.8 -35',
+  },
+  '5호선:여의도:17': {
+    pathUp: 'M 516.1 505.9 c 11.8 0 22.8 -16.8 22.8 -35',
+  },
+  '5호선:광화문(세종문화회관):24': {
+    pathDown: 'M 592.4 216 c 14 0 26 11 26 20 v 26.8',
+  },
+  '5호선:종로3가(탑골공원):25': {
+    name: '종로3가',
+    x: 618.4,
+    pathUp: 'M 592.4 216 c 14 0 26 11 26 20 v 26.8',
+    pathDown: 'M 618.4 262.9 V 288.1 c 0 11 9 20 20 20 l 2.5 0',
+  },
+  '5호선:을지로4가:26': {
+    pathUp: 'M 618.4 262.9 V 288.1 c 0 11 9 20 20 20 l 2.5 0',
+    pathDown: 'M 640.9 308.1 h 19',
+  },
+  '5호선:동대문역사문화공원:27': {
+    pathUp: 'M 640.9 308.1 h 19',
+    pathDown: 'M 659.9 308.1 h 12 c 11 0 11 20 22 20 h 11',
+  },
+  '5호선:청구:28': {
+    pathUp: 'M 659.9 308.1 h 12 c 11 0 11 20 22 20 h 11',
+  },
+  '5호선:신금호:29': {
+    pathDown: 'M 732.3 328.1 h 24.1',
+  },
+  '5호선:행당:30': {
+    y: 328.1,
+    pathUp: 'M 732.3 328.1 h 24.1',
+    pathDown: 'M 756.4 328.1 h 10 c 9 0 9 -14.7 18 -14.7 h 9.7',
+  },
+  '5호선:왕십리:31': {
+    pathUp: 'M 756.4 328.1 h 10 c 9 0 9 -14.7 18 -14.7 h 9.7',
+  },
+  '5호선:미사:46': {
+    x: 1054.8,
+    y: 419.1,
+    pathDown: 'M 1054.8 419.1 h 26.9',
+  },
+  '5호선:하남풍산:47': {
+    x: 1081.7,
+    y: 419.1,
+    pathDown: 'M 1081.7 419.1 h 27.1',
+  },
+  '5호선:하남시청(덕풍.신장):48': {
+    x: 1108.8,
+    y: 419.1,
+    pathDown: 'M 1108.8 419.1 c 11 0 20 9 20 20',
+  },
+  '5호선:하남검단산역:49': {
+    x: 1128.8,
+    y: 439.1,
+    pathDown: null,
   },
 }
 
@@ -288,14 +361,22 @@ const BADGE_SIDE: Record<string, Side> = {
   '오금': 'right',
   '진접': 'bottom',
   '오이도': 'top',
+  '방화': 'left',
+  '마천': 'right',
+  '하남검단산역': 'bottom',
+}
+
+const BADGE_EXTRA: Record<string, number> = {
+  '하남검단산역': 10,
 }
 
 function badgePos(s: Station): { x: number; y: number } {
   const side = BADGE_SIDE[s.name]
-  if (side === 'top') return { x: s.x, y: s.y - BADGE_OFFSET - 8 }
-  if (side === 'bottom') return { x: s.x, y: s.y + BADGE_OFFSET }
-  if (side === 'left') return { x: s.x - BADGE_OFFSET, y: s.y }
-  if (side === 'right') return { x: s.x + BADGE_OFFSET + 8, y: s.y }
+  const extra = BADGE_EXTRA[s.name] ?? 0
+  if (side === 'top') return { x: s.x, y: s.y - BADGE_OFFSET - 8 - extra }
+  if (side === 'bottom') return { x: s.x, y: s.y + BADGE_OFFSET + extra }
+  if (side === 'left') return { x: s.x - BADGE_OFFSET - extra, y: s.y }
+  if (side === 'right') return { x: s.x + BADGE_OFFSET + 8 + extra, y: s.y }
   const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: -1, dy: 0 }
   const len = Math.hypot(tan.dx, tan.dy) || 1
   const ux = -tan.dx / len
@@ -319,7 +400,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '을지로입구': 'bottom',
   '을지로4가': 'bottom',
   '동대문역사문화공원': 'tr',
-  '을지로3가': 'tr',
+  '을지로3가': 'top',
   '한양대': 'left',
   '뚝섬': 'left',
   '서울대입구(관악구청)': 'bottom',
@@ -329,7 +410,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '외대앞': 'bottom',
   '양주': 'tr',
   '덕계': 'tr',
-  '시청': 'tr',
+  '시청': 'top',
   '도림천': 'top',
   '경복궁(정부서울청사)': 'left',
   '종로5가': 'bottom',
@@ -347,6 +428,21 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '회현(남대문시장)': 'br',
   '오류동': 'left',
   '별내별가람': 'bl',
+  '김포공항': 'right',
+  '화곡': 'bottom',
+  '오목교(목동운동장앞)': 'bottom',
+  '영등포구청': 'tr',
+  '영등포시장': 'right',
+  '대방': 'bottom',
+  '충정로(경기대입구)': 'top',
+  '장한평': 'right',
+  '강동': 'bottom',
+  '길동': 'left',
+  '둔촌동': 'bottom',
+  '올림픽공원(한국체대)': 'right',
+  '하남검단산역': 'bottom',
+  '개롱': 'bottom',
+  '오금': 'bottom',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -365,38 +461,32 @@ function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
 }
 
 const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
-  '을지로3가': { dx: 5, dy: -8 },
+  '을지로3가': { dy: -9 },
+  '시청': { dy: 2 },
+  '왕십리': { dx: 8 },
+  '오금': { dy: 6 },
   '동대문역사문화공원': { dx: 4, dy: 10 },
   '종로3가': { dx: -3 },
   '금정': { dx: 3 },
   '사당': { dx: -1, dy: 4 },
-  '시청': { dx: 2, dy: 7 },
+  '을지로4가': { dy: 9 },
 }
 
 function labelLayout(s: Station): LabelLayout {
   const dir = LABEL_DIR[s.name]
+  const ovr = LABEL_OFFSET[s.name]
+  let base: LabelLayout
   if (dir) {
-    const base = layoutForDir(s.x, s.y, dir)
-    const ovr = LABEL_OFFSET[s.name]
-    if (ovr) return { ...base, x: base.x + (ovr.dx ?? 0), y: base.y + (ovr.dy ?? 0) }
-    return base
+    base = layoutForDir(s.x, s.y, dir)
+  } else {
+    const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: 1, dy: 0 }
+    const isVertical = Math.abs(tan.dy) > Math.abs(tan.dx)
+    base = isVertical
+      ? { x: s.x + LABEL_DIST, y: s.y, textAnchor: 'start', baseline: 'central' }
+      : { x: s.x, y: s.y - LABEL_DIST, textAnchor: 'middle', baseline: 'alphabetic' }
   }
-  const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: 1, dy: 0 }
-  const isVertical = Math.abs(tan.dy) > Math.abs(tan.dx)
-  if (isVertical) {
-    return {
-      x: s.x + LABEL_DIST,
-      y: s.y,
-      textAnchor: 'start',
-      baseline: 'central',
-    }
-  }
-  return {
-    x: s.x,
-    y: s.y - LABEL_DIST,
-    textAnchor: 'middle',
-    baseline: 'alphabetic',
-  }
+  if (ovr) return { ...base, x: base.x + (ovr.dx ?? 0), y: base.y + (ovr.dy ?? 0) }
+  return base
 }
 
 function InvertedWheelZoom({ children }: { children: React.ReactNode }) {
@@ -553,7 +643,7 @@ export default function SubwayMap() {
                     strokeLinejoin="round"
                     transform={l.rotation ? `rotate(${l.rotation} ${l.x} ${l.y})` : undefined}
                   >
-                    {g.name}
+                    {g.name.replace(/\(.+?\)/g, '')}
                   </text>
                 )
               })}
