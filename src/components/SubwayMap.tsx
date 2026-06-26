@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -270,6 +270,8 @@ const BADGE_SIDE: Record<string, Side> = {
   '서동탄': 'top',
   '신창(순천향대)': 'right',
   '까치산': 'top',
+  '대화': 'top',
+  '오금': 'right',
 }
 
 function badgePos(s: Station): { x: number; y: number } {
@@ -301,6 +303,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '을지로입구': 'bottom',
   '을지로4가': 'bottom',
   '동대문역사문화공원': 'top',
+  '을지로3가': 'tr',
   '한양대': 'left',
   '뚝섬': 'left',
   '서울대입구(관악구청)': 'bottom',
@@ -312,6 +315,13 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '덕계': 'tr',
   '시청': 'tr',
   '도림천': 'top',
+  '경복궁(정부서울청사)': 'right',
+  '종로5가': 'bottom',
+  '종로3가': 'tr',
+  '충무로': 'bottom',
+  '약수': 'right',
+  '학여울': 'right',
+  '교대(법원.검찰청)': 'tr',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -323,15 +333,26 @@ function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
     case 'left': return { x: x - D, y, textAnchor: 'end', baseline: 'central' }
     case 'right': return { x: x + D, y, textAnchor: 'start', baseline: 'central' }
     case 'tl': return { x: x - Dd, y: y - Dd, textAnchor: 'end', baseline: 'alphabetic', rotation: 20 }
-    case 'tr': return { x: x + Dd, y: y - Dd, textAnchor: 'start', baseline: 'alphabetic', rotation: -20 }
+    case 'tr': return { x: x + Dd - 1.5, y: y - Dd - 1.5, textAnchor: 'start', baseline: 'alphabetic', rotation: -20 }
     case 'bl': return { x: x - Dd, y: y + Dd, textAnchor: 'end', baseline: 'hanging', rotation: -20 }
     case 'br': return { x: x + Dd, y: y + Dd, textAnchor: 'start', baseline: 'hanging', rotation: 20 }
   }
 }
 
+const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
+  '을지로3가': { dx: 5, dy: -8 },
+  '동대문역사문화공원': { dx: 6 },
+  '종로3가': { dx: -3 },
+}
+
 function labelLayout(s: Station): LabelLayout {
   const dir = LABEL_DIR[s.name]
-  if (dir) return layoutForDir(s.x, s.y, dir)
+  if (dir) {
+    const base = layoutForDir(s.x, s.y, dir)
+    const ovr = LABEL_OFFSET[s.name]
+    if (ovr) return { ...base, x: base.x + (ovr.dx ?? 0), y: base.y + (ovr.dy ?? 0) }
+    return base
+  }
   const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: 1, dy: 0 }
   const isVertical = Math.abs(tan.dy) > Math.abs(tan.dx)
   if (isVertical) {
