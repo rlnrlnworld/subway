@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -67,16 +67,20 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '5호선:송정:4': {
     pathUp: 'M 271.9 254.4 v 63.5',
   },
+  '5호선:영등포구청:14': {
+    pathDown: 'M 451.9 467.1 C 470.1 467.1 482.3 471.4 482.3 481.4',
+  },
   '5호선:영등포시장:15': {
-    pathDown: 'M 482.3 481.4 c 11 11 22 24.5 33.8 24.5',
+    pathUp: 'M 451.9 467.1 C 470.1 467.1 482.3 471.4 482.3 481.4',
+    pathDown: 'M 482.3 481.4 C 482.3 491.2 490.8 505.9 516.1 505.9',
   },
   '5호선:신길:16': {
     y: 505.9,
-    pathUp: 'M 482.3 481.4 c 11 11 22 24.5 33.8 24.5',
-    pathDown: 'M 516.1 505.9 c 11.8 0 22.8 -16.8 22.8 -35',
+    pathUp: 'M 482.3 481.4 C 482.3 491.2 490.8 505.9 516.1 505.9',
+    pathDown: 'M 516.1 505.9 C 533.2 505.9 538.9 484.9 538.9 470.9',
   },
   '5호선:여의도:17': {
-    pathUp: 'M 516.1 505.9 c 11.8 0 22.8 -16.8 22.8 -35',
+    pathUp: 'M 516.1 505.9 C 533.2 505.9 538.9 484.9 538.9 470.9',
   },
   '5호선:광화문(세종문화회관):24': {
     pathDown: 'M 592.4 216 c 14 0 26 11 26 20 v 26.8',
@@ -93,10 +97,10 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   },
   '5호선:동대문역사문화공원:27': {
     pathUp: 'M 640.9 308.1 h 19',
-    pathDown: 'M 659.9 308.1 h 12 c 11 0 11 20 22 20 h 11',
+    pathDown: 'M 659.9 308.1 c 22.5 0 22.5 20 45 20',
   },
   '5호선:청구:28': {
-    pathUp: 'M 659.9 308.1 h 12 c 11 0 11 20 22 20 h 11',
+    pathUp: 'M 659.9 308.1 c 22.5 0 22.5 20 45 20',
   },
   '5호선:신금호:29': {
     pathDown: 'M 732.3 328.1 h 24.1',
@@ -104,10 +108,10 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '5호선:행당:30': {
     y: 328.1,
     pathUp: 'M 732.3 328.1 h 24.1',
-    pathDown: 'M 756.4 328.1 h 10 c 9 0 9 -14.7 18 -14.7 h 9.7',
+    pathDown: 'M 756.4 328.1 c 18.85 0 18.85 -14.7 37.7 -14.7',
   },
   '5호선:왕십리:31': {
-    pathUp: 'M 756.4 328.1 h 10 c 9 0 9 -14.7 18 -14.7 h 9.7',
+    pathUp: 'M 756.4 328.1 c 18.85 0 18.85 -14.7 37.7 -14.7',
   },
   '5호선:미사:46': {
     x: 1054.8,
@@ -129,6 +133,12 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
     y: 439.1,
     pathDown: null,
   },
+  '6호선:응암:1': { x: 409.4, y: 200 },
+  '6호선:역촌:2': { x: 446, y: 181.6 },
+  '6호선:불광:3': { x: 451.9, y: 164.9 },
+  '6호선:독바위:4': { x: 429.4, y: 132.7 },
+  '6호선:연신내:5': { x: 409.4, y: 164.9 },
+  '6호선:구산:6': { x: 409.4, y: 181.6 },
 }
 
 const activeStations = allStations
@@ -269,6 +279,7 @@ const TRANSFER_DIST = 30
 
 const DOT_POS_OVERRIDE: Record<string, { x?: number; y?: number }> = {
   '신설동': { y: 264 },
+  '약수': { x: 701.4, y: 366.1 },
 }
 
 const dotGroups: DotGroup[] = (() => {
@@ -344,6 +355,7 @@ const dotGroups: DotGroup[] = (() => {
 const terminals = activeStations.filter(s => {
   if (!s.pathUp || !s.pathDown) {
     if (s.line === '2호선' && s.name !== '까치산') return false
+    if (s.line === '6호선' && s.name !== '신내') return false
     return true
   }
   return false
@@ -364,6 +376,7 @@ const BADGE_SIDE: Record<string, Side> = {
   '방화': 'left',
   '마천': 'right',
   '하남검단산역': 'bottom',
+  '신내': 'bottom',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
@@ -399,7 +412,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '구로디지털단지': 'tr',
   '을지로입구': 'bottom',
   '을지로4가': 'bottom',
-  '동대문역사문화공원': 'tr',
+  '동대문역사문화공원': 'top',
   '을지로3가': 'top',
   '한양대': 'left',
   '뚝섬': 'left',
@@ -443,6 +456,14 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '하남검단산역': 'bottom',
   '개롱': 'bottom',
   '오금': 'bottom',
+  '효창공원앞': 'bottom',
+  '공덕': 'top',
+  '마포': 'left',
+  '한강진': 'bottom',
+  '역촌': 'right',
+  '불광': 'tr',
+  '연신내': 'tr',
+  '응암': 'left',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -465,11 +486,12 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '시청': { dy: 2 },
   '왕십리': { dx: 8 },
   '오금': { dy: 6 },
-  '동대문역사문화공원': { dx: 4, dy: 10 },
   '종로3가': { dx: -3 },
   '금정': { dx: 3 },
   '사당': { dx: -1, dy: 4 },
   '을지로4가': { dy: 9 },
+  '공덕': { dy: 10 },
+  '동대문역사문화공원': { dx: 2, dy: 4 },
 }
 
 function labelLayout(s: Station): LabelLayout {
