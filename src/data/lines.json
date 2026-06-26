@@ -1,0 +1,185 @@
+{
+  "viewBox": {
+    "x": 69,
+    "y": 51,
+    "width": 1080,
+    "height": 775
+  },
+  "lines": [
+    {
+      "name": "공항철도",
+      "color": "#0090D2",
+      "label": "공항",
+      "startX": 148.9,
+      "startY": 426.4
+    },
+    {
+      "name": "신분당선",
+      "color": "#D4003B",
+      "label": "신분",
+      "startX": 662.9,
+      "startY": 685.7
+    },
+    {
+      "name": "용인에버라인",
+      "color": "#77C4A3",
+      "label": "에버",
+      "startX": 640,
+      "startY": 741.6
+    },
+    {
+      "name": "김포골드라인",
+      "color": "#AF9100",
+      "label": "김포",
+      "startX": 148.9,
+      "startY": 204.5
+    },
+    {
+      "name": "8호선",
+      "color": "#E6186C",
+      "label": "8",
+      "startX": 836,
+      "startY": 516.1
+    },
+    {
+      "name": "GTX-A",
+      "color": "#9F4181",
+      "label": "A",
+      "startX": 137.8,
+      "startY": 163.5
+    },
+    {
+      "name": "자기부상",
+      "color": "#C4A4DE",
+      "label": "자기",
+      "startX": 156,
+      "startY": 805
+    },
+    {
+      "name": "인천2호선",
+      "color": "#ED8B00",
+      "label": "I2",
+      "startX": 156,
+      "startY": 326.8
+    },
+    {
+      "name": "7호선",
+      "color": "#747F00",
+      "label": "7",
+      "startX": 182,
+      "startY": 549.1
+    },
+    {
+      "name": "인천1호선",
+      "color": "#7CA8D5",
+      "label": "I1",
+      "startX": 179.5,
+      "startY": 275.6
+    },
+    {
+      "name": "경의중앙",
+      "color": "#77C4A3",
+      "label": "경의",
+      "startX": 89.4,
+      "startY": 71
+    },
+    {
+      "name": "수인분당",
+      "color": "#F5A200",
+      "label": "수분",
+      "startX": 210.9,
+      "startY": 739.1
+    },
+    {
+      "name": "3호선",
+      "color": "#EF7C1C",
+      "label": "3",
+      "startX": 148.9,
+      "startY": 116.1
+    },
+    {
+      "name": "4호선",
+      "color": "#00A5DE",
+      "label": "4",
+      "startX": 393.8,
+      "startY": 773
+    },
+    {
+      "name": "1호선",
+      "color": "#0052A4",
+      "label": "1",
+      "startX": 210.9,
+      "startY": 702.8000000000001
+    },
+    {
+      "name": "경춘",
+      "color": "#0C8E72",
+      "label": "경춘",
+      "startX": 834.7,
+      "startY": 270
+    },
+    {
+      "name": "경강",
+      "color": "#003DA5",
+      "label": "경강",
+      "startX": 836,
+      "startY": 674
+    },
+    {
+      "name": "서해",
+      "color": "#81A914",
+      "label": "서해",
+      "startX": 271.9,
+      "startY": 254.4
+    },
+    {
+      "name": "6호선",
+      "color": "#CD7C2F",
+      "label": "6",
+      "startX": 409.4,
+      "startY": 207.5
+    },
+    {
+      "name": "5호선",
+      "color": "#996CAC",
+      "label": "5",
+      "startX": 210.9,
+      "startY": 214.1
+    },
+    {
+      "name": "2호선",
+      "color": "#00A84D",
+      "label": "2",
+      "startX": 330.90000000000003,
+      "startY": 474.1
+    },
+    {
+      "name": "9호선",
+      "color": "#BDB092",
+      "label": "9",
+      "startX": 210.89999999999998,
+      "startY": 268.5
+    },
+    {
+      "name": "신림선",
+      "color": "#6789CA",
+      "label": "신림",
+      "startX": 506.6,
+      "startY": 544.7
+    },
+    {
+      "name": "우이신설",
+      "color": "#B0CE18",
+      "label": "우이",
+      "startX": 492.29999999999995,
+      "startY": 116.1
+    },
+    {
+      "name": "의정부경전철",
+      "color": "#FF7728",
+      "label": "의정",
+      "startX": 760.9,
+      "startY": 91
+    }
+  ]
+}
