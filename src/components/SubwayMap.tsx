@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -41,6 +41,20 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   },
   '2호선:도림천:2': {
     pathUp: 'M 451.9 505.9 C 451.9 499.8 449.9 497.8 446 497.8 H 412.1',
+  },
+  '4호선:회현(남대문시장):17': {
+    pathDown: 'M 592 343.9 C 587.56 343.9 580.9 357.22 580.9 366.1',
+  },
+  '4호선:서울역:18': {
+    pathUp: 'M 592 343.9 C 587.56 343.9 580.9 357.22 580.9 366.1',
+    pathDown: 'M 580.9 366.1 C 580.9 374.5 586.6 387.1 590.4 387.1',
+  },
+  '4호선:숙대입구(갈월):19': {
+    pathUp: 'M 580.9 366.1 C 580.9 374.5 586.6 387.1 590.4 387.1',
+  },
+  '4호선:불암산(당고개):1': {
+    x: 1076.3,
+    pathDown: 'M 1076.3 164.6 H 1012.1',
   },
 }
 
@@ -272,6 +286,8 @@ const BADGE_SIDE: Record<string, Side> = {
   '까치산': 'top',
   '대화': 'top',
   '오금': 'right',
+  '진접': 'bottom',
+  '오이도': 'top',
 }
 
 function badgePos(s: Station): { x: number; y: number } {
@@ -302,7 +318,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '구로디지털단지': 'tr',
   '을지로입구': 'bottom',
   '을지로4가': 'bottom',
-  '동대문역사문화공원': 'top',
+  '동대문역사문화공원': 'tr',
   '을지로3가': 'tr',
   '한양대': 'left',
   '뚝섬': 'left',
@@ -315,13 +331,22 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '덕계': 'tr',
   '시청': 'tr',
   '도림천': 'top',
-  '경복궁(정부서울청사)': 'right',
+  '경복궁(정부서울청사)': 'left',
   '종로5가': 'bottom',
   '종로3가': 'tr',
   '충무로': 'bottom',
   '약수': 'right',
   '학여울': 'right',
   '교대(법원.검찰청)': 'tr',
+  '정왕': 'left',
+  '대야미': 'tl',
+  '금정': 'tr',
+  '사당': 'tl',
+  '신용산': 'right',
+  '삼각지': 'bottom',
+  '회현(남대문시장)': 'br',
+  '오류동': 'left',
+  '별내별가람': 'bl',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -341,8 +366,11 @@ function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
 
 const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '을지로3가': { dx: 5, dy: -8 },
-  '동대문역사문화공원': { dx: 6 },
+  '동대문역사문화공원': { dx: 4, dy: 10 },
   '종로3가': { dx: -3 },
+  '금정': { dx: 3 },
+  '사당': { dx: -1, dy: 4 },
+  '시청': { dx: 2, dy: 7 },
 }
 
 function labelLayout(s: Station): LabelLayout {
