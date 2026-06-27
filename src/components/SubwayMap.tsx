@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -192,6 +192,29 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   },
   '7호선:온수(성공회대입구):42': {
     name: '온수',
+  },
+  '2호선:잠실나루:15': {
+    pathDown: 'M 828.9 479.8 v 30.2',
+  },
+  '2호선:잠실(송파구청):16': {
+    y: 510,
+    pathUp: 'M 828.9 479.8 v 30.2',
+    pathDown: 'M 828.9 510 v 22.6',
+  },
+  '2호선:잠실새내:17': {
+    pathUp: 'M 828.9 510 v 22.6',
+  },
+  '8호선:몽촌토성(평화의문):10': {
+    pathDown: 'M 841.9 490.6 c -4 4 -13 12 -13 17 v 2.4',
+  },
+  '8호선:잠실(송파구청):11': {
+    x: 828.9,
+    y: 510,
+    pathUp: 'M 841.9 490.6 c -4 4 -13 12 -13 17 v 2.4',
+    pathDown: 'M 828.9 510 v 8 c 0 4 25 26.2 33.4 26.2 h 8',
+  },
+  '8호선:석촌:12': {
+    pathUp: 'M 828.9 510 v 8 c 0 4 25 26.2 33.4 26.2 h 8',
   },
 }
 
@@ -432,10 +455,13 @@ const BADGE_SIDE: Record<string, Side> = {
   '신내': 'bottom',
   '장암': 'left',
   '석남(거북시장)': 'left',
+  '별내': 'right',
+  '모란': 'bottom',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
   '하남검단산역': 10,
+  '별내': 6,
 }
 
 function badgePos(s: Station): { x: number; y: number } {
@@ -486,7 +512,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '충무로': 'bottom',
   '약수': 'right',
   '학여울': 'right',
-  '교대(법원.검찰청)': 'tr',
+  '교대(법원.검찰청)': 'top',
   '정왕': 'left',
   '대야미': 'tl',
   '금정': 'tr',
@@ -541,6 +567,19 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '도봉': 'right',
   '마들': 'right',
   '장암': 'right',
+  '잠실나루': 'left',
+  '잠실새내': 'left',
+  '몽촌토성(평화의문)': 'bottom',
+  '석촌': 'bottom',
+  '고속터미널': 'bottom',
+  '잠실(송파구청)': 'left',
+  '천호(풍납토성)': 'bottom',
+  '남위례': 'bottom',
+  '남한산성입구(성남법원.검찰청)': 'right',
+  '암사': 'bottom',
+  '장자호수공원': 'right',
+  '구리': 'bottom',
+  '동구릉': 'bottom',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -576,6 +615,8 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '어린이대공원(세종대)': { dx: 10 },
   '장한평': { dy: 2 },
   '태릉입구': { dy: -4 },
+  '몽촌토성(평화의문)': { dx: 6 },
+  '교대(법원.검찰청)': { dx: 6, dy: -2 },
 }
 
 function labelLayout(s: Station): LabelLayout {
