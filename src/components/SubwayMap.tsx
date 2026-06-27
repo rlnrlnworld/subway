@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -457,6 +457,8 @@ const BADGE_SIDE: Record<string, Side> = {
   '석남(거북시장)': 'left',
   '별내': 'right',
   '모란': 'bottom',
+  '개화': 'left',
+  '중앙보훈병원': 'right',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
@@ -522,7 +524,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '회현(남대문시장)': 'br',
   '오류동': 'left',
   '별내별가람': 'bl',
-  '김포공항': 'right',
+  '김포공항': 'top',
   '화곡': 'bottom',
   '오목교(목동운동장앞)': 'bottom',
   '영등포구청': 'tr',
@@ -570,7 +572,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '잠실나루': 'left',
   '잠실새내': 'left',
   '몽촌토성(평화의문)': 'bottom',
-  '석촌': 'bottom',
+  '석촌': 'top',
   '고속터미널': 'bottom',
   '잠실(송파구청)': 'left',
   '천호(풍납토성)': 'bottom',
@@ -580,6 +582,17 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '장자호수공원': 'right',
   '구리': 'bottom',
   '동구릉': 'bottom',
+  '공항시장': 'bottom',
+  '등촌': 'right',
+  '노들': 'bottom',
+  '흑석(중앙대입구)': 'bottom',
+  '구반포': 'bottom',
+  '신반포': 'top',
+  '사평': 'bottom',
+  '봉은사': 'tr',
+  '삼성중앙': 'bl',
+  '석촌고분': 'br',
+  '송파': 'bottom',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -617,6 +630,12 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '태릉입구': { dy: -4 },
   '몽촌토성(평화의문)': { dx: 6 },
   '교대(법원.검찰청)': { dx: 6, dy: -2 },
+  '김포공항': { dy: 10 },
+  '여의도': { dx: 2, dy: -8 },
+  '샛강': { dx: 4, dy: 1 },
+  '봉은사': { dy: 4 },
+  '종합운동장': { dx: -6, dy: 10 },
+  '올림픽공원(한국체대)': { dx: -3, dy: -8 },
 }
 
 function labelLayout(s: Station): LabelLayout {
