@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -139,6 +139,60 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '6호선:독바위:4': { x: 429.4, y: 132.7 },
   '6호선:연신내:5': { x: 409.4, y: 164.9 },
   '6호선:구산:6': { x: 409.4, y: 181.6 },
+  '3호선:동대입구:24': {
+    pathDown: 'M 677.9 337.2 c 11 0 27 9 27 20 v 8.9',
+  },
+  '3호선:약수:25': {
+    x: 704.9,
+    pathUp: 'M 677.9 337.2 c 11 0 27 9 27 20 v 8.9',
+    pathDown: 'M 704.9 366.1 v 33.4',
+  },
+  '3호선:금호:26': {
+    x: 704.9,
+    pathUp: 'M 704.9 366.1 v 33.4',
+    pathDown: 'M 704.9 399.5 v 33.9',
+  },
+  '3호선:옥수:27': {
+    x: 704.9,
+    pathUp: 'M 704.9 399.5 v 33.9',
+    pathDown: 'M 704.9 433.4 v 22.2',
+  },
+  '3호선:압구정:28': {
+    x: 704.9,
+    pathUp: 'M 704.9 433.4 v 22.2',
+    pathDown: 'M 704.9 455.6 v 18.7',
+  },
+  '3호선:신사:29': {
+    x: 704.9,
+    pathUp: 'M 704.9 455.6 v 18.7',
+    pathDown: 'M 704.9 474.3 v 19.1',
+  },
+  '3호선:잠원:30': {
+    x: 704.9,
+    pathUp: 'M 704.9 474.3 v 19.1',
+    pathDown: 'M 704.9 493.4 v 26.3',
+  },
+  '3호선:고속터미널:31': {
+    x: 704.9,
+    pathUp: 'M 704.9 493.4 v 26.3',
+    pathDown: 'M 704.9 519.7 v 59.7',
+  },
+  '3호선:교대(법원.검찰청):32': {
+    x: 704.9,
+    pathUp: 'M 704.9 519.7 v 59.7',
+    pathDown: 'M 704.9 579.4 v 33.3',
+  },
+  '3호선:남부터미널(예술의전당):33': {
+    x: 704.9,
+    pathUp: 'M 704.9 579.4 v 33.3',
+    pathDown: 'M 704.9 612.7 c 0 11 9 20 20 20 h 4.9',
+  },
+  '3호선:양재(서초구청):34': {
+    pathUp: 'M 704.9 612.7 c 0 11 9 20 20 20 h 4.9',
+  },
+  '7호선:온수(성공회대입구):42': {
+    name: '온수',
+  },
 }
 
 const activeStations = allStations
@@ -279,7 +333,6 @@ const TRANSFER_DIST = 30
 
 const DOT_POS_OVERRIDE: Record<string, { x?: number; y?: number }> = {
   '신설동': { y: 264 },
-  '약수': { x: 701.4, y: 366.1 },
 }
 
 const dotGroups: DotGroup[] = (() => {
@@ -377,6 +430,8 @@ const BADGE_SIDE: Record<string, Side> = {
   '마천': 'right',
   '하남검단산역': 'bottom',
   '신내': 'bottom',
+  '장암': 'left',
+  '석남(거북시장)': 'left',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
@@ -406,7 +461,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '개봉': 'bottom',
   '구일': 'bottom',
   '구로': 'br',
-  '가산디지털단지': 'left',
+  '가산디지털단지': 'bottom',
   '석수': 'tr',
   '신도림': 'br',
   '구로디지털단지': 'tr',
@@ -448,7 +503,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '영등포시장': 'right',
   '대방': 'bottom',
   '충정로(경기대입구)': 'top',
-  '장한평': 'right',
+  '장한평': 'tr',
   '강동': 'bottom',
   '길동': 'left',
   '둔촌동': 'bottom',
@@ -464,6 +519,28 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '불광': 'tr',
   '연신내': 'tr',
   '응암': 'left',
+  '창신': 'top',
+  '춘의': 'left',
+  '삼산체육관': 'left',
+  '부천종합운동장': 'bottom',
+  '온수': 'top',
+  '장승배기': 'bottom',
+  '반포': 'right',
+  '논현': 'right',
+  '학동': 'right',
+  '강남구청': 'right',
+  '청담': 'right',
+  '자양(뚝섬한강공원)': 'left',
+  '건대입구': 'left',
+  '어린이대공원(세종대)': 'bottom',
+  '중곡': 'right',
+  '용마산': 'right',
+  '사가정': 'right',
+  '면목': 'right',
+  '태릉입구': 'bottom',
+  '도봉': 'right',
+  '마들': 'right',
+  '장암': 'right',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -492,6 +569,13 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '을지로4가': { dy: 9 },
   '공덕': { dy: 10 },
   '동대문역사문화공원': { dx: 2, dy: 4 },
+  '약수': { dy: -8 },
+  '온수': { dy: 4 },
+  '가산디지털단지': { dy: -6 },
+  '건대입구': { dx: -4 },
+  '어린이대공원(세종대)': { dx: 10 },
+  '장한평': { dy: 2 },
+  '태릉입구': { dy: -4 },
 }
 
 function labelLayout(s: Station): LabelLayout {
@@ -519,8 +603,14 @@ function InvertedWheelZoom({ children }: { children: React.ReactNode }) {
     if (!el) return
     const handler = (e: WheelEvent) => {
       e.preventDefault()
-      if (e.deltaY > 0) zoomIn(0.15, 150)
-      else zoomOut(0.15, 150)
+      const isPinch = e.ctrlKey
+      if (isPinch) {
+        if (e.deltaY < 0) zoomIn(0.15, 150)
+        else zoomOut(0.15, 150)
+      } else {
+        if (e.deltaY > 0) zoomIn(0.15, 150)
+        else zoomOut(0.15, 150)
+      }
     }
     el.addEventListener('wheel', handler, { passive: false })
     return () => el.removeEventListener('wheel', handler)
