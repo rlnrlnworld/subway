@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선', '인천1호선', '인천2호선']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -192,6 +192,9 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   },
   '7호선:온수(성공회대입구):42': {
     name: '온수',
+  },
+  '7호선:석남(거북시장):53': {
+    name: '석남',
   },
   '2호선:잠실나루:15': {
     pathDown: 'M 828.9 479.8 v 30.2',
@@ -454,11 +457,15 @@ const BADGE_SIDE: Record<string, Side> = {
   '하남검단산역': 'bottom',
   '신내': 'bottom',
   '장암': 'left',
-  '석남(거북시장)': 'left',
+  '석남': 'left',
   '별내': 'right',
   '모란': 'bottom',
-  '개화': 'left',
+  '개화': 'top',
   '중앙보훈병원': 'right',
+  '계양': 'top',
+  '송도달빛축제공원': 'bottom',
+  '검단오류': 'top',
+  '운연': 'bottom',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
@@ -466,21 +473,31 @@ const BADGE_EXTRA: Record<string, number> = {
   '별내': 6,
 }
 
+const BADGE_NUDGE: Record<string, { dx?: number; dy?: number }> = {
+  '송도달빛축제공원': { dx: -10 },
+}
+
 function badgePos(s: Station): { x: number; y: number } {
   const side = BADGE_SIDE[s.name]
   const extra = BADGE_EXTRA[s.name] ?? 0
-  if (side === 'top') return { x: s.x, y: s.y - BADGE_OFFSET - 8 - extra }
-  if (side === 'bottom') return { x: s.x, y: s.y + BADGE_OFFSET + extra }
-  if (side === 'left') return { x: s.x - BADGE_OFFSET - extra, y: s.y }
-  if (side === 'right') return { x: s.x + BADGE_OFFSET + 8 + extra, y: s.y }
-  const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: -1, dy: 0 }
-  const len = Math.hypot(tan.dx, tan.dy) || 1
-  const ux = -tan.dx / len
-  const uy = -tan.dy / len
-  return {
-    x: s.x + ux * BADGE_OFFSET,
-    y: s.y + uy * BADGE_OFFSET,
+  const nudge = BADGE_NUDGE[s.name]
+  let pos: { x: number; y: number }
+  if (side === 'top') pos = { x: s.x, y: s.y - BADGE_OFFSET - 8 - extra }
+  else if (side === 'bottom') pos = { x: s.x, y: s.y + BADGE_OFFSET + extra }
+  else if (side === 'left') pos = { x: s.x - BADGE_OFFSET - extra, y: s.y }
+  else if (side === 'right') pos = { x: s.x + BADGE_OFFSET + 8 + extra, y: s.y }
+  else {
+    const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: -1, dy: 0 }
+    const len = Math.hypot(tan.dx, tan.dy) || 1
+    const ux = -tan.dx / len
+    const uy = -tan.dy / len
+    pos = {
+      x: s.x + ux * BADGE_OFFSET,
+      y: s.y + uy * BADGE_OFFSET,
+    }
   }
+  if (nudge) return { x: pos.x + (nudge.dx ?? 0), y: pos.y + (nudge.dy ?? 0) }
+  return pos
 }
 
 type LabelDir = 'top' | 'bottom' | 'left' | 'right' | 'tl' | 'tr' | 'bl' | 'br'
@@ -549,7 +566,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '응암': 'left',
   '창신': 'top',
   '춘의': 'left',
-  '삼산체육관': 'left',
+  '삼산체육관': 'right',
   '부천종합운동장': 'bottom',
   '온수': 'top',
   '장승배기': 'bottom',
@@ -593,6 +610,25 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '삼성중앙': 'bl',
   '석촌고분': 'br',
   '송파': 'bottom',
+  '검바위': 'left',
+  '아시아드경기장': 'left',
+  '귤현': 'right',
+  '갈산': 'left',
+  '서구청': 'left',
+  '가정': 'left',
+  '가정중앙시장': 'left',
+  '서부여성회관': 'left',
+  '인천가좌': 'left',
+  '가재울': 'left',
+  '주안국가산단': 'left',
+  '석바위시장': 'bottom',
+  '백운': 'tl',
+  '동수': 'bl',
+  '석천사거리': 'bottom',
+  '인천시청': 'top',
+  '만수': 'right',
+  '국제업무지구': 'bottom',
+  '인천대입구': 'bottom',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -636,6 +672,11 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '봉은사': { dy: 4 },
   '종합운동장': { dx: -6, dy: 10 },
   '올림픽공원(한국체대)': { dx: -3, dy: -8 },
+  '부평구청': { dx: -6 },
+  '삼산체육관': { dx: -1, dy: 3 },
+  '백운': { dy: 3 },
+  '동수': { dy: -2 },
+  '인천시청': { dy: 6 },
 }
 
 function labelLayout(s: Station): LabelLayout {
