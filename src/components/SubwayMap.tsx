@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선', '인천1호선', '인천2호선']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선', '인천1호선', '인천2호선', '신분당선', '수인분당']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -108,10 +108,7 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '5호선:행당:30': {
     y: 328.1,
     pathUp: 'M 732.3 328.1 h 24.1',
-    pathDown: 'M 756.4 328.1 c 18.85 0 18.85 -14.7 37.7 -14.7',
-  },
-  '5호선:왕십리:31': {
-    pathUp: 'M 756.4 328.1 c 18.85 0 18.85 -14.7 37.7 -14.7',
+    pathDown: 'M 756.4 328.1 c 15.3 0 15.3 -14.7 30.6 -14.7',
   },
   '5호선:미사:46': {
     x: 1054.8,
@@ -196,6 +193,95 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '7호선:석남(거북시장):53': {
     name: '석남',
   },
+  '1호선:청량리(서울시립대입구):25': {
+    name: '청량리',
+  },
+  '수인분당:청량리:1': {
+    pathDown: 'M 834.9 262.9 V 280 c 0 5 -5 4.2 -10 4.2 H 802 c -8.3 0 -15 6.7 -15 15 v 14.3',
+  },
+  '수인분당:선정릉(한국과학창의재단):6': {
+    name: '선정릉',
+  },
+  '수인분당:복정(동서울대학):14': {
+    name: '복정',
+  },
+  '신분당선:신사:16': {
+    pathDown: 'M 708 474.3 h 13 c 8 0 16 2 22 6.1',
+  },
+  '신분당선:논현:15': {
+    pathUp: 'M 708 474.3 h 13 c 8 0 16 2 22 6.1',
+  },
+  '5호선:왕십리:31': {
+    x: 787,
+    pathUp: 'M 756.4 328.1 c 15.3 0 15.3 -14.7 30.6 -14.7',
+    pathDown: 'M 787 313.4 h 57.5',
+  },
+  '5호선:마장:32': {
+    pathUp: 'M 787 313.4 h 57.5',
+  },
+  '2호선:상왕십리:7': {
+    pathDown: 'M 742 308.1 h 37 c 4 0 8 1.9 8 5.2',
+  },
+  '2호선:왕십리:8': {
+    x: 787,
+    pathUp: 'M 742 308.1 h 37 c 4 0 8 1.9 8 5.2',
+    pathDown: 'M 787 313.3 c 5 5 22 9 29.1 11.3',
+  },
+  '2호선:한양대:9': {
+    pathUp: 'M 787 313.3 c 5 5 22 9 29.1 11.3',
+  },
+  '수인분당:서울숲:3': {
+    pathDown: 'M 787 372 V 410',
+  },
+  '수인분당:압구정로데오:4': {
+    y: 410,
+    pathUp: 'M 787 372 V 410',
+    pathDown: 'M 787 410 V 443.4',
+  },
+  '수인분당:강남구청:5': {
+    pathUp: 'M 787 410 V 443.4',
+  },
+  '수인분당:영통(경희대):32': {
+    pathDown: 'M 574 710.1 c -5 6 -19 13 -19 21.4',
+  },
+  '수인분당:망포:33': {
+    x: 555,
+    pathUp: 'M 574 710.1 c -5 6 -19 13 -19 21.4',
+    pathDown: 'M 555 731.5 v 19.4',
+  },
+  '수인분당:매탄권선:34': {
+    x: 555,
+    pathUp: 'M 555 731.5 v 19.4',
+    pathDown: 'M 555 750.9 v 19.6',
+  },
+  '수인분당:수원시청(경기도문화의전당):35': {
+    x: 555,
+    pathUp: 'M 555 750.9 v 19.6',
+    pathDown: 'M 555 770.5 V 789.9',
+  },
+  '수인분당:매교:36': {
+    x: 555,
+    pathUp: 'M 555 770.5 V 789.9',
+    pathDown: 'M 555 789.9 V 797.9',
+  },
+  '수인분당:수원:37': {
+    x: 555,
+    pathUp: 'M 555 789.9 V 797.9',
+    pathDown: 'M 555 797.9 V 813',
+  },
+  '수인분당:고색:38': {
+    y: 810,
+    pathUp: 'M 555 797.9 V 813 c 0 5 -5 5 -10 5 h -31.1 c -7 0 -10 -3 -10 -8',
+    pathDown: 'M 503.9 810 V 770',
+  },
+  '수인분당:오목천:39': {
+    y: 770,
+    pathUp: 'M 503.9 810 V 770',
+    pathDown: 'M 503.9 770 V 737.6',
+  },
+  '수인분당:어천:40': {
+    pathUp: 'M 503.9 770 V 737.6',
+  },
   '2호선:잠실나루:15': {
     pathDown: 'M 828.9 479.8 v 30.2',
   },
@@ -242,7 +328,8 @@ const TRANSFER_R = 4.5
 const TRANSFER_STROKE = 1.6
 const LABEL_FONT = 5
 const LABEL_DIST = DOT_OUTER_R + 2.5
-const BADGE_R = 9
+const BADGE_R = 7
+const BADGE_CORNER = 2.6
 const BADGE_OFFSET = BADGE_R + 8
 
 type Pt = { x: number; y: number }
@@ -357,8 +444,33 @@ function intersectSeg(s1: Seg, s2: Seg): Pt | null {
 
 const TRANSFER_DIST = 30
 
+const TRANSFER_PILL_DOT_R = 2.4
+const TRANSFER_PILL_GAP = 1.6
+const TRANSFER_PILL_PAD = 1.6
+const TRANSFER_PILL_STROKE = 0.8
+
+type PillOrientation = 'horizontal' | 'vertical' | 'diag-up' | 'diag-down'
+
+const TRANSFER_PILL_ORIENTATION: Record<string, PillOrientation> = {
+  '서울역': 'vertical',
+  '주안': 'horizontal',
+  '오이도': 'horizontal',
+  '정왕': 'diag-up',
+  '신길온천': 'vertical',
+  '안산': 'vertical',
+  '초지': 'diag-down',
+  '고잔': 'horizontal',
+  '중앙': 'horizontal',
+  '미금(분당서울대병원)': 'vertical',
+  '정자': 'vertical',
+  '모란': 'vertical',
+  '수서': 'vertical',
+  '복정': 'horizontal',
+}
+
 const DOT_POS_OVERRIDE: Record<string, { x?: number; y?: number }> = {
   '신설동': { y: 264 },
+  '오금': { y: 584.95 },
 }
 
 const dotGroups: DotGroup[] = (() => {
@@ -435,6 +547,7 @@ const terminals = activeStations.filter(s => {
   if (!s.pathUp || !s.pathDown) {
     if (s.line === '2호선' && s.name !== '까치산') return false
     if (s.line === '6호선' && s.name !== '신내') return false
+    if (s.line === '수인분당' && s.name === '수원') return false
     return true
   }
   return false
@@ -443,7 +556,7 @@ const terminals = activeStations.filter(s => {
 type Side = 'top' | 'bottom' | 'left' | 'right'
 
 const BADGE_SIDE: Record<string, Side> = {
-  '인천': 'bottom',
+  '인천': 'left',
   '광명': 'left',
   '서동탄': 'top',
   '신창(순천향대)': 'right',
@@ -451,7 +564,7 @@ const BADGE_SIDE: Record<string, Side> = {
   '대화': 'top',
   '오금': 'right',
   '진접': 'bottom',
-  '오이도': 'top',
+  '오이도': 'left',
   '방화': 'left',
   '마천': 'right',
   '하남검단산역': 'bottom',
@@ -465,7 +578,11 @@ const BADGE_SIDE: Record<string, Side> = {
   '계양': 'top',
   '송도달빛축제공원': 'bottom',
   '검단오류': 'top',
-  '운연': 'bottom',
+  '운연': 'left',
+  '광교(경기대)': 'left',
+  '신사': 'left',
+  '청량리': 'right',
+  '수원': 'bottom',
 }
 
 const BADGE_EXTRA: Record<string, number> = {
@@ -475,12 +592,19 @@ const BADGE_EXTRA: Record<string, number> = {
 
 const BADGE_NUDGE: Record<string, { dx?: number; dy?: number }> = {
   '송도달빛축제공원': { dx: -10 },
+  '청량리': { dx: -12 },
+}
+
+const BADGE_NUDGE_BY_ID: Record<string, { dx?: number; dy?: number }> = {
+  '1호선:인천:62': { dy: -11 },
+  '수인분당:인천:63': { dy: 11 },
 }
 
 function badgePos(s: Station): { x: number; y: number } {
   const side = BADGE_SIDE[s.name]
   const extra = BADGE_EXTRA[s.name] ?? 0
   const nudge = BADGE_NUDGE[s.name]
+  const nudgeById = BADGE_NUDGE_BY_ID[s.id]
   let pos: { x: number; y: number }
   if (side === 'top') pos = { x: s.x, y: s.y - BADGE_OFFSET - 8 - extra }
   else if (side === 'bottom') pos = { x: s.x, y: s.y + BADGE_OFFSET + extra }
@@ -496,7 +620,8 @@ function badgePos(s: Station): { x: number; y: number } {
       y: s.y + uy * BADGE_OFFSET,
     }
   }
-  if (nudge) return { x: pos.x + (nudge.dx ?? 0), y: pos.y + (nudge.dy ?? 0) }
+  if (nudge) pos = { x: pos.x + (nudge.dx ?? 0), y: pos.y + (nudge.dy ?? 0) }
+  if (nudgeById) pos = { x: pos.x + (nudgeById.dx ?? 0), y: pos.y + (nudgeById.dy ?? 0) }
   return pos
 }
 
@@ -590,7 +715,6 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '잠실새내': 'left',
   '몽촌토성(평화의문)': 'bottom',
   '석촌': 'top',
-  '고속터미널': 'bottom',
   '잠실(송파구청)': 'left',
   '천호(풍납토성)': 'bottom',
   '남위례': 'bottom',
@@ -606,9 +730,9 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '구반포': 'bottom',
   '신반포': 'top',
   '사평': 'bottom',
-  '봉은사': 'tr',
-  '삼성중앙': 'bl',
-  '석촌고분': 'br',
+  '봉은사': 'right',
+  '삼성중앙': 'right',
+  '석촌고분': 'bottom',
   '송파': 'bottom',
   '검바위': 'left',
   '아시아드경기장': 'left',
@@ -629,6 +753,51 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '만수': 'right',
   '국제업무지구': 'bottom',
   '인천대입구': 'bottom',
+  '숭의(인하대병원)': 'left',
+  '인하대': 'bottom',
+  '송도': 'left',
+  '연수': 'left',
+  '신포': 'left',
+  '남동인더스파크': 'bottom',
+  '호구포': 'bottom',
+  '인천논현': 'bottom',
+  '소래포구': 'bottom',
+  '오이도': 'right',
+  '청명': 'bottom',
+  '상갈(루터대학교)': 'bottom',
+  '기흥(백남준아트센터)': 'bottom',
+  '신갈': 'bottom',
+  '구성': 'bottom',
+  '보정': 'bottom',
+  '죽전(단국대)': 'bottom',
+  '오리': 'bottom',
+  '미금(분당서울대병원)': 'bottom',
+  '정자': 'bottom',
+  '양재시민의숲(매헌)': 'bottom',
+  '판교(판교테크노밸리)': 'right',
+  '남부터미널(예술의전당)': 'left',
+  '고속터미널': 'right',
+  '압구정로데오': 'left',
+  '신논현': 'bottom',
+  '선정릉': 'bottom',
+  '강남': 'top',
+  '도곡': 'top',
+  '구룡': 'bottom',
+  '대모산입구': 'right',
+  '수서': 'top',
+  '청량리': 'top',
+  '복정': 'left',
+  '가천대': 'left',
+  '태평': 'left',
+  '신길온천': 'bottom',
+  '안산': 'bottom',
+  '중앙': 'right',
+  '고잔': 'right',
+  '한대앞': 'left',
+  '상록수': 'left',
+  '어천': 'left',
+  '오목천': 'left',
+  '고색': 'left',
 }
 
 function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
@@ -649,8 +818,6 @@ function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
 const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '을지로3가': { dy: -9 },
   '시청': { dy: 2 },
-  '왕십리': { dx: 8 },
-  '오금': { dy: 6 },
   '종로3가': { dx: -3 },
   '금정': { dx: 3 },
   '사당': { dx: -1, dy: 4 },
@@ -669,7 +836,15 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '김포공항': { dy: 10 },
   '여의도': { dx: 2, dy: -8 },
   '샛강': { dx: 4, dy: 1 },
-  '봉은사': { dy: 4 },
+  '삼성중앙': { dy: -2 },
+  '선정릉': { dy: 2 },
+  '강남': { dy: -2 },
+  '도곡': { dx: 10, dy: 2 },
+  '논현': { dx: 2 },
+  '수서': { dy: -8 },
+  '모란': { dy: -4 },
+  '복정': { dx: -2 },
+  '석촌고분': { dx: 10, dy: -2 },
   '종합운동장': { dx: -6, dy: 10 },
   '올림픽공원(한국체대)': { dx: -3, dy: -8 },
   '부평구청': { dx: -6 },
@@ -677,20 +852,27 @@ const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '백운': { dy: 3 },
   '동수': { dy: -2 },
   '인천시청': { dy: 6 },
+  '오이도': { dx: 6 },
+  '중앙': { dx: 6, dy: 1 },
+  '한대앞': { dx: 6, dy: -6 },
+  '미금(분당서울대병원)': { dy: 6 },
+  '정자': { dy: 6 },
 }
 
-function labelLayout(s: Station): LabelLayout {
+function labelLayout(s: Station, x?: number, y?: number): LabelLayout {
   const dir = LABEL_DIR[s.name]
   const ovr = LABEL_OFFSET[s.name]
+  const px = x ?? s.x
+  const py = y ?? s.y
   let base: LabelLayout
   if (dir) {
-    base = layoutForDir(s.x, s.y, dir)
+    base = layoutForDir(px, py, dir)
   } else {
     const tan = computeTangent(s.pathUp) ?? computeTangent(s.pathDown) ?? { dx: 1, dy: 0 }
     const isVertical = Math.abs(tan.dy) > Math.abs(tan.dx)
     base = isVertical
-      ? { x: s.x + LABEL_DIST, y: s.y, textAnchor: 'start', baseline: 'central' }
-      : { x: s.x, y: s.y - LABEL_DIST, textAnchor: 'middle', baseline: 'alphabetic' }
+      ? { x: px + LABEL_DIST, y: py, textAnchor: 'start', baseline: 'central' }
+      : { x: px, y: py - LABEL_DIST, textAnchor: 'middle', baseline: 'alphabetic' }
   }
   if (ovr) return { ...base, x: base.x + (ovr.dx ?? 0), y: base.y + (ovr.dy ?? 0) }
   return base
@@ -812,25 +994,76 @@ export default function SubwayMap() {
             ))}
 
             <g>
-              {dotGroups.map(g => {
-                const isTransfer = g.lines.length >= 2
-                if (isTransfer) {
-                  return (
-                    <circle
-                      key={`${g.key}-t`}
-                      cx={g.x}
-                      cy={g.y}
-                      r={TRANSFER_R}
+              {dotGroups.filter(g => g.lines.length < 2).map(g => (
+                <g key={g.key}>
+                  <circle cx={g.x} cy={g.y} r={DOT_OUTER_R} fill="white" />
+                  <circle cx={g.x} cy={g.y} r={DOT_INNER_R} fill={lineColorMap.get(g.lines[0]) ?? '#888'} />
+                </g>
+              ))}
+            </g>
+
+            <g>
+              {dotGroups.filter(g => g.lines.length >= 2).map(g => {
+                const override = TRANSFER_PILL_ORIENTATION[g.name]
+                let orientation: PillOrientation
+                if (override) {
+                  orientation = override
+                } else {
+                  let sumDx = 0, sumDy = 0
+                  for (const s of g.stations) {
+                    const t = computeTangent(s.pathUp) ?? computeTangent(s.pathDown)
+                    if (!t) continue
+                    sumDx += Math.abs(t.dx)
+                    sumDy += Math.abs(t.dy)
+                  }
+                  orientation = sumDy > sumDx ? 'vertical' : 'horizontal'
+                }
+                const sortedLines = [...g.lines].sort(
+                  (a, b) => ACTIVE_LINES.indexOf(a) - ACTIVE_LINES.indexOf(b)
+                )
+                const n = sortedLines.length
+                const r = TRANSFER_PILL_DOT_R
+                const span = n * 2 * r + (n - 1) * TRANSFER_PILL_GAP
+                const cross = 2 * r
+                const isVertical = orientation === 'vertical'
+                const w = isVertical ? cross + 2 * TRANSFER_PILL_PAD : span + 2 * TRANSFER_PILL_PAD
+                const h = isVertical ? span + 2 * TRANSFER_PILL_PAD : cross + 2 * TRANSFER_PILL_PAD
+                const rectX = g.x - w / 2
+                const rectY = g.y - h / 2
+                const rx = Math.min(w, h) / 2
+                const rotate = orientation === 'diag-up' ? -45 : orientation === 'diag-down' ? 45 : 0
+                return (
+                  <g
+                    key={`${g.key}-t`}
+                    transform={rotate ? `rotate(${rotate} ${g.x} ${g.y})` : undefined}
+                  >
+                    <rect
+                      x={rectX}
+                      y={rectY}
+                      width={w}
+                      height={h}
+                      rx={rx}
+                      ry={rx}
                       fill="white"
                       stroke="#111"
-                      strokeWidth={TRANSFER_STROKE}
+                      strokeWidth={TRANSFER_PILL_STROKE}
                     />
-                  )
-                }
-                return (
-                  <g key={g.key}>
-                    <circle cx={g.x} cy={g.y} r={DOT_OUTER_R} fill="white" />
-                    <circle cx={g.x} cy={g.y} r={DOT_INNER_R} fill={lineColorMap.get(g.lines[0]) ?? '#888'} />
+                    {sortedLines.map((ln, i) => {
+                      const offset = -span / 2 + r + i * (2 * r + TRANSFER_PILL_GAP)
+                      const cx = isVertical ? g.x : g.x + offset
+                      const cy = isVertical ? g.y + offset : g.y
+                      return (
+                        <circle
+                          key={ln}
+                          cx={cx}
+                          cy={cy}
+                          r={r}
+                          fill={lineColorMap.get(ln) ?? '#888'}
+                          stroke="white"
+                          strokeWidth={0.6}
+                        />
+                      )
+                    })}
                   </g>
                 )
               })}
@@ -838,7 +1071,7 @@ export default function SubwayMap() {
 
             <g style={{ pointerEvents: 'none' }}>
               {dotGroups.map(g => {
-                const l = labelLayout(g.stations[0])
+                const l = labelLayout(g.stations[0], g.x, g.y)
                 const isTransfer = g.lines.length >= 2
                 return (
                   <text
@@ -867,10 +1100,19 @@ export default function SubwayMap() {
                 const line = activeLines.find(l => l.name === s.line)
                 if (!line) return null
                 const pos = badgePos(s)
-                const fontSize = line.label.length === 1 ? 10 : line.label.length === 2 ? 6 : 5
+                const fontSize = line.label.length === 1 ? 8 : line.label.length === 2 ? 5 : 4
+                const size = BADGE_R * 2
                 return (
                   <g key={`${s.id}-badge`}>
-                    <circle cx={pos.x} cy={pos.y} r={BADGE_R} fill={line.color} />
+                    <rect
+                      x={pos.x - BADGE_R}
+                      y={pos.y - BADGE_R}
+                      width={size}
+                      height={size}
+                      rx={BADGE_CORNER}
+                      ry={BADGE_CORNER}
+                      fill={line.color}
+                    />
                     <text
                       x={pos.x}
                       y={pos.y}
