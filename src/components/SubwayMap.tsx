@@ -24,7 +24,7 @@ type Line = {
   startY: number
 }
 
-const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선', '인천1호선', '인천2호선', '신분당선', '수인분당']
+const ACTIVE_LINES = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선', '인천1호선', '인천2호선', '신분당선', '수인분당', '경의중앙', '공항철도', '경춘', '경강', '서해', '용인경전철', '김포골드라인', '신림선', '우이신설', '의정부경전철', 'GTX-A']
 
 const { lines: allLines } = linesData as { viewBox: { x: number; y: number; width: number; height: number }; lines: Line[] }
 const allStations = stations as Station[]
@@ -196,8 +196,31 @@ const STATION_OVERRIDE: Record<string, Partial<Station>> = {
   '1호선:청량리(서울시립대입구):25': {
     name: '청량리',
   },
+  '4호선:이촌(국립중앙박물관):22': {
+    name: '이촌',
+  },
+  '6호선:광흥창(서강):15': {
+    name: '광흥창',
+  },
+  '6호선:대흥(서강대앞):16': {
+    name: '대흥',
+  },
+  '경의중앙:가좌:23': {
+    pathDown: 'M 438 261.4 c 11 0 20 9 20 20 v 74.2',
+  },
+  '경의중앙:홍대입구:24': {
+    x: 458,
+    pathUp: 'M 438 261.4 c 11 0 20 9 20 20 v 74.2',
+    pathDown: 'M 458 355.6 v 13.3 c 0 8.3 6.7 15 15 15 h 23.2',
+  },
+  '경의중앙:서강대:25': {
+    pathUp: 'M 458 355.6 v 13.3 c 0 8.3 6.7 15 15 15 h 23.2',
+  },
   '수인분당:청량리:1': {
     pathDown: 'M 834.9 262.9 V 280 c 0 5 -5 4.2 -10 4.2 H 802 c -8.3 0 -15 6.7 -15 15 v 14.3',
+  },
+  '경의중앙:서울역:22': {
+    pathDown: 'M 568.9 366.1 H 580.9',
   },
   '수인분당:선정릉(한국과학창의재단):6': {
     name: '선정릉',
@@ -444,6 +467,8 @@ function intersectSeg(s1: Seg, s2: Seg): Pt | null {
 
 const TRANSFER_DIST = 30
 
+const SAME_LINE_PILL = new Set<string>(['문산'])
+
 const TRANSFER_PILL_DOT_R = 2.4
 const TRANSFER_PILL_GAP = 1.6
 const TRANSFER_PILL_PAD = 1.6
@@ -466,11 +491,16 @@ const TRANSFER_PILL_ORIENTATION: Record<string, PillOrientation> = {
   '모란': 'vertical',
   '수서': 'vertical',
   '복정': 'horizontal',
+  '공덕': 'vertical',
+  '효창공원앞': 'vertical',
 }
 
 const DOT_POS_OVERRIDE: Record<string, { x?: number; y?: number }> = {
   '신설동': { y: 264 },
   '오금': { y: 584.95 },
+  '효창공원앞': { x: 554 },
+  '공덕': { y: 392 },
+  '홍대입구': { y: 335 },
 }
 
 const dotGroups: DotGroup[] = (() => {
@@ -496,7 +526,9 @@ const dotGroups: DotGroup[] = (() => {
           visited.add(j)
         }
       }
-      const linesInCluster = Array.from(new Set(cluster.map(s => s.line)))
+      const linesInCluster = SAME_LINE_PILL.has(name)
+        ? cluster.map(s => s.line)
+        : Array.from(new Set(cluster.map(s => s.line)))
       const cx = cluster.reduce((a, s) => a + s.x, 0) / cluster.length
       const cy = cluster.reduce((a, s) => a + s.y, 0) / cluster.length
       let dotX = cx
@@ -548,6 +580,7 @@ const terminals = activeStations.filter(s => {
     if (s.line === '2호선' && s.name !== '까치산') return false
     if (s.line === '6호선' && s.name !== '신내') return false
     if (s.line === '수인분당' && s.name === '수원') return false
+    if (s.id === '경의중앙:문산:1') return false
     return true
   }
   return false
@@ -628,6 +661,18 @@ function badgePos(s: Station): { x: number; y: number } {
 type LabelDir = 'top' | 'bottom' | 'left' | 'right' | 'tl' | 'tr' | 'bl' | 'br'
 
 const LABEL_DIR: Record<string, LabelDir> = {
+  '한국항공대': 'left',
+  '수색': 'left',
+  '탄현': 'right',
+  '상수': 'bottom',
+  '광흥창': 'bottom',
+  '대흥': 'bottom',
+  '서강대': 'top',
+  '가좌': 'bottom',
+  '서빙고': 'right',
+  '한남': 'left',
+  '응봉': 'left',
+  '홍대입구': 'bottom',
   '개봉': 'bottom',
   '구일': 'bottom',
   '구로': 'br',
@@ -688,7 +733,7 @@ const LABEL_DIR: Record<string, LabelDir> = {
   '역촌': 'right',
   '불광': 'tr',
   '연신내': 'tr',
-  '응암': 'left',
+  '응암': 'right',
   '창신': 'top',
   '춘의': 'left',
   '삼산체육관': 'right',
@@ -816,13 +861,17 @@ function layoutForDir(x: number, y: number, dir: LabelDir): LabelLayout {
 }
 
 const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
+  '대곡': { dx: -10 },
+  '공덕': { dy: -6 },
+  '디지털미디어시티': { dy: -10 },
+  '홍대입구': { dx: 14, dy: 2 },
+  '합정': { dy: -4 },
   '을지로3가': { dy: -9 },
   '시청': { dy: 2 },
   '종로3가': { dx: -3 },
   '금정': { dx: 3 },
   '사당': { dx: -1, dy: 4 },
   '을지로4가': { dy: 9 },
-  '공덕': { dy: 10 },
   '동대문역사문화공원': { dx: 2, dy: 4 },
   '약수': { dy: -8 },
   '온수': { dy: 4 },
@@ -1054,7 +1103,7 @@ export default function SubwayMap() {
                       const cy = isVertical ? g.y + offset : g.y
                       return (
                         <circle
-                          key={ln}
+                          key={`${ln}-${i}`}
                           cx={cx}
                           cy={cy}
                           r={r}
