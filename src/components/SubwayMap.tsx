@@ -887,9 +887,10 @@ function Minimap() {
 export default function SubwayMap() {
   return (
     <TransformWrapper
-      initialScale={1}
+      initialScale={1.6}
       minScale={0.5}
       maxScale={8}
+      centerOnInit
       wheel={{ disabled: true }}
       doubleClick={{ disabled: true }}
     >
