@@ -1,18 +1,17 @@
 'use client'
 import { activeLines } from './data'
 import { ACTIVE_LINES } from './config'
-import type { Line, SelectedDot } from './types'
+import { useMapStore } from '@/store/mapStore'
+import type { Line } from './types'
 
-type Props = {
-  dot: SelectedDot | null
-  open: boolean
-  onClose: () => void
-}
+export function StationDetailPanel() {
+  const dot = useMapStore((s) => s.selectedDot)
+  const open = useMapStore((s) => s.panelOpen)
+  const closePanel = useMapStore((s) => s.closePanel)
 
-export function StationDetailPanel({ dot, open, onClose }: Props) {
   const lineMeta: Line[] = dot
     ? dot.lines
-        .map(name => activeLines.find(l => l.name === name))
+        .map((name) => activeLines.find((l) => l.name === name))
         .filter((l): l is Line => Boolean(l))
         .sort((a, b) => ACTIVE_LINES.indexOf(a.name) - ACTIVE_LINES.indexOf(b.name))
     : []
@@ -27,7 +26,7 @@ export function StationDetailPanel({ dot, open, onClose }: Props) {
       <header className="station-panel-header">
         <div className="station-panel-title">
           <div className="station-panel-badges">
-            {lineMeta.map(l => (
+            {lineMeta.map((l) => (
               <span
                 key={l.name}
                 className="line-badge"
@@ -43,7 +42,7 @@ export function StationDetailPanel({ dot, open, onClose }: Props) {
         <button
           type="button"
           className="station-panel-close"
-          onClick={onClose}
+          onClick={closePanel}
           aria-label="닫기"
         >
           <svg

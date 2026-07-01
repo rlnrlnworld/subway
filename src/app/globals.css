@@ -118,13 +118,13 @@ body {
 .station-panel {
   position: fixed;
   top: 2.5vh;
-  right: 0;
+  right: 20px;
   height: 95vh;
   width: 25vw;
   background: #ffffff;
-  border-radius: 20px 0 0 20px;
-  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
-  transform: translateX(100%);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+  transform: translateX(calc(100% + 20px));
   transition: transform 0.3s ease-out;
   z-index: 90;
   display: flex;

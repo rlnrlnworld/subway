@@ -12,19 +12,20 @@ import {
 import { useTransformEffect } from 'react-zoom-pan-pinch'
 import { activeLines } from './data'
 import { ACTIVE_LINES } from './config'
-import type { Line, SelectedDot } from './types'
+import { useMapStore } from '@/store/mapStore'
+import type { Line } from './types'
 
 const TOOLTIP_OFFSET = 10
 const ARROW_SIZE = 14 // rotated square 대각선 tip 반영
 const ARROW_HALF = ARROW_SIZE / 2
 
 type Props = {
-  dot: SelectedDot
   containerRef: React.RefObject<HTMLDivElement | null>
-  onOpenPanel: () => void
 }
 
-export function DotTooltip({ dot, containerRef, onOpenPanel }: Props) {
+export function DotTooltip({ containerRef }: Props) {
+  const dot = useMapStore((s) => s.selectedDot)
+  const openPanel = useMapStore((s) => s.openPanel)
   const arrowRef = useRef<HTMLDivElement>(null)
 
   const { refs, floatingStyles, middlewareData, placement, update } = useFloating({
@@ -41,11 +42,12 @@ export function DotTooltip({ dot, containerRef, onOpenPanel }: Props) {
 
   // dot 엘리먼트를 reference로 지정
   useLayoutEffect(() => {
+    if (!dot) return
     const dotEl = containerRef.current?.querySelector(
       `.station-dot[data-key="${CSS.escape(dot.key)}"]`
     )
     if (dotEl) refs.setReference(dotEl as Element)
-  }, [dot.key, refs, containerRef])
+  }, [dot?.key, refs, containerRef])
 
   // pan/zoom 시 위치 재계산
   useTransformEffect(() => { update() })
@@ -55,6 +57,8 @@ export function DotTooltip({ dot, containerRef, onOpenPanel }: Props) {
 
   const arrowX = middlewareData.arrow?.x
   const arrowY = middlewareData.arrow?.y
+
+  if (!dot) return null
 
   // 노선 뱃지 데이터 — ACTIVE_LINES 순서대로 정렬
   const lineMeta: Line[] = dot.lines
@@ -72,7 +76,7 @@ export function DotTooltip({ dot, containerRef, onOpenPanel }: Props) {
           <button
             type="button"
             className="dot-tooltip-header"
-            onClick={onOpenPanel}
+            onClick={openPanel}
             aria-label={`${displayName} 상세 열기`}
           >
             <div className="dot-tooltip-badges">
