@@ -1,5 +1,5 @@
 'use client'
-import useSWR, { type SWRConfiguration } from 'swr'
+import useSWR, { preload, type SWRConfiguration } from 'swr'
 import type { ArrivalsResponse } from '@/types/arrivals'
 
 class ArrivalsError extends Error {
@@ -61,6 +61,17 @@ export function useArrivals(
     warning: swr.data?.warning,
     hasData: Boolean(swr.data && swr.data.arrivals.length > 0),
   }
+}
+
+/**
+ * SWR 캐시 워밍만 수행 (컴포넌트 subscribe 안 함).
+ * useArrivals와 동일 key/fetcher 사용 → 이후 useArrivals가 마운트되면 캐시 히트.
+ * 이미 캐시에 있으면 no-op.
+ */
+export function preloadArrivals(ids: readonly string[] | null | undefined): void {
+  const key = buildKey(ids)
+  if (!key) return
+  preload(key, fetcher)
 }
 
 export { ArrivalsError }

@@ -8,7 +8,7 @@ import {
 } from './data'
 import { ACTIVE_LINES } from './config'
 import { useMapStore } from '@/store/mapStore'
-import { useArrivals } from '@/hooks/useArrivals'
+import { preloadArrivals, useArrivals } from '@/hooks/useArrivals'
 import type { Arrival } from '@/types/arrivals'
 import type { Line } from './types'
 
@@ -261,13 +261,15 @@ function ArrivalsBody({
   lineColor: string
 }) {
   const [refreshedAt, setRefreshedAt] = useState<number | null>(null)
-  const { data, arrivals, warning, isLoading, error, hasData } = useArrivals(
-    ids,
-    {
-      // deep-equal 응답이든 아니든 fetch 완료마다 발화 → 갱신 시각 최신화
-      onSuccess: () => setRefreshedAt(Date.now()),
+  const baselineRef = useRef(Date.now())
+  const { arrivals, warning, isLoading, error, hasData } = useArrivals(ids, {
+    // deep-equal 응답이든 아니든 fetch 완료마다 발화 → 갱신 시각 + 카운트다운 baseline 동기화
+    onSuccess: () => {
+      const now = Date.now()
+      setRefreshedAt(now)
+      baselineRef.current = now
     },
-  )
+  })
 
   // ids 바뀌면 이전 갱신 시각 표시 방지
   const idsKeyStr = ids?.join('|') ?? ''
@@ -275,12 +277,8 @@ function ArrivalsBody({
     setRefreshedAt(null)
   }, [idsKeyStr])
 
-  // 1s 카운트다운: 새 data ref 도착 시 baseline 재설정, hasData 동안만 tick
-  const baselineRef = useRef(Date.now())
+  // 1s 카운트다운: hasData 동안만 tick
   const [nowTick, setNowTick] = useState(0)
-  useEffect(() => {
-    if (data) baselineRef.current = Date.now()
-  }, [data])
   useEffect(() => {
     if (!hasData) return
     const id = window.setInterval(() => setNowTick((n) => n + 1), 1000)
@@ -458,6 +456,43 @@ export function StationDetailPanel() {
     const group = dotGroupsByKey.get(dot.key)
     const target = group?.stations.find((s) => s.line === selectedLine)
     return target ? [target.id] : null
+  }, [open, dot, selectedLine])
+
+  // 이웃 역 프리페치 — idle 시점, 본 역 fetch에 영향 안 주도록 지연
+  useEffect(() => {
+    if (!open || !dot || !selectedLine) return
+    const { prev, next } = findNeighbors(dot.name, selectedLine)
+    const names = [...prev, ...next]
+    if (names.length === 0) return
+
+    const run = () => {
+      for (const name of names) {
+        const groups = dotGroupsByName.get(name) ?? []
+        const group = groups.find((g) => g.lines.includes(selectedLine))
+        const station = group?.stations.find((s) => s.line === selectedLine)
+        if (station) preloadArrivals([station.id])
+      }
+    }
+
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number
+      cancelIdleCallback?: (id: number) => void
+    }
+    let handle: number
+    let isIdle = false
+    if (typeof w.requestIdleCallback === 'function') {
+      handle = w.requestIdleCallback(run, { timeout: 1500 })
+      isIdle = true
+    } else {
+      handle = window.setTimeout(run, 500)
+    }
+    return () => {
+      if (isIdle && typeof w.cancelIdleCallback === 'function') {
+        w.cancelIdleCallback(handle)
+      } else {
+        window.clearTimeout(handle)
+      }
+    }
   }, [open, dot, selectedLine])
 
   return (
