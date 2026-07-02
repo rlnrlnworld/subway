@@ -38,7 +38,7 @@ export const FOCUS_SCALE = 2.5
 export const FOCUS_ANIM_MS = 300
 
 // 상세 패널 너비 (vw)
-export const PANEL_VW = 25
+export const PANEL_VW = 40
 
 // 상세 패널 우측 여백 (px) — 뷰포트 오른쪽 가장자리와의 간격
 export const PANEL_RIGHT_MARGIN_PX = 20

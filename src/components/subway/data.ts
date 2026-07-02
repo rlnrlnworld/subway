@@ -1,5 +1,6 @@
 import stations from '@/data/stations.json'
 import linesData from '@/data/lines.json'
+import routeOrderRaw from '@/data/route-order.json'
 import type { Station, Line, DotGroup } from './types'
 import {
   ACTIVE_LINES,
@@ -17,6 +18,12 @@ import {
   TERMINAL_EXCLUDE_LINE_NAME,
 } from './overrides'
 import { parseSegments, intersectSeg } from './geometry'
+
+type LineDef = {
+  type: 'linear' | 'loop' | 'branched'
+  arms: Record<string, string[]>
+}
+const routeOrder = routeOrderRaw as Record<string, LineDef>
 
 const { lines: allLines } = linesData as {
   viewBox: { x: number; y: number; width: number; height: number }
@@ -43,6 +50,10 @@ for (const s of activeStations) {
   const arr = activeStationsByLine.get(s.line) ?? []
   arr.push(s)
   activeStationsByLine.set(s.line, arr)
+}
+// 노선 진행 순서(order)로 정렬 — 이웃 역 조회용
+for (const arr of activeStationsByLine.values()) {
+  arr.sort((a, b) => a.order - b.order)
 }
 
 // ─────────────────────────────────────────────────────────
@@ -149,6 +160,39 @@ export const dotGroups: DotGroup[] = (() => {
 
 // dot 그룹 인덱스 (툴팁 클릭 O(1) 조회용)
 export const dotGroupsByKey = new Map(dotGroups.map(g => [g.key, g]))
+
+// 이름 → dot 그룹 배열 (환승/분기 대응)
+export const dotGroupsByName = (() => {
+  const m = new Map<string, DotGroup[]>()
+  for (const g of dotGroups) {
+    const arr = m.get(g.name) ?? []
+    arr.push(g)
+    m.set(g.name, arr)
+  }
+  return m
+})()
+
+// ─────────────────────────────────────────────────────────
+// 이웃 역 조회 — route-order.json 기반. arm 다중 등장 = 분기점.
+// ─────────────────────────────────────────────────────────
+export function findNeighbors(
+  currentName: string,
+  line: string,
+): { prev: string[]; next: string[] } {
+  const def = routeOrder[line]
+  if (!def) return { prev: [], next: [] }
+  const prev = new Set<string>()
+  const next = new Set<string>()
+  for (const [armName, arm] of Object.entries(def.arms)) {
+    const idx = arm.indexOf(currentName)
+    if (idx === -1) continue
+    if (idx > 0) prev.add(arm[idx - 1])
+    else if (def.type === 'loop' && armName === '본선') prev.add(arm[arm.length - 1])
+    if (idx < arm.length - 1) next.add(arm[idx + 1])
+    else if (def.type === 'loop' && armName === '본선') next.add(arm[0])
+  }
+  return { prev: [...prev], next: [...next] }
+}
 
 // ─────────────────────────────────────────────────────────
 // Terminals (badge 표시 대상)

@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:route-order": "tsx scripts/build-route-order.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.19",
