@@ -5,7 +5,7 @@ import type { Arrival, ArrivalsResponse } from '@/types/arrivals'
 type ApiMapEntry = { realtimeApiName?: string; tagoStationId?: string }
 const MAP = apiMap as Record<string, ApiMapEntry>
 
-const REALTIME_BASE = 'https://swopenapi.seoul.go.kr/api/subway'
+const REALTIME_BASE = 'http://swopenapi.seoul.go.kr/api/subway'
 const TAGO_BASE = 'https://apis.data.go.kr/1613000/SubwayInfo'
 
 const SUBWAY_ID_TO_LOCAL_LINE: Record<string, string> = {

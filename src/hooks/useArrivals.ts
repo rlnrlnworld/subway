@@ -30,7 +30,7 @@ const DEFAULT_CONFIG: SWRConfiguration<ArrivalsResponse, ArrivalsError> = {
   dedupingInterval: 5000,      // 같은 key 5초 내 재요청 dedup
   revalidateOnFocus: false,    // 탭 복귀 시 재요청 방지 (부담↓)
   shouldRetryOnError: false,   // 실패 시 자동 재시도 없음
-  keepPreviousData: true,      // refetch 중 이전 데이터 유지 (UI flicker 방지)
+  keepPreviousData: false,     // key 변경 시(역/노선 전환) 스켈레톤 노출 — 같은 key 15s refetch는 in-place 갱신이라 flicker 없음
 }
 
 /**
