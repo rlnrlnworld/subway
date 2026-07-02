@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:route-order": "tsx scripts/build-route-order.ts"
+    "build:route-order": "npx tsx scripts/build-route-order.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.19",

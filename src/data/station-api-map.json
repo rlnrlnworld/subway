@@ -3,25 +3,9 @@
     "realtimeApiName": "홍대입구",
     "tagoStationId": "MTRARA1A03"
   },
-  "공항철도:검암:7": {
-    "realtimeApiName": "검암",
-    "tagoStationId": "MTRARA1A07"
-  },
-  "공항철도:계양:6": {
-    "realtimeApiName": "계양",
-    "tagoStationId": "MTRARA1A06"
-  },
   "공항철도:공덕:2": {
     "realtimeApiName": "공덕",
     "tagoStationId": "MTRARA1A02"
-  },
-  "공항철도:공항화물청사:11": {
-    "realtimeApiName": "공항화물청사",
-    "tagoStationId": "MTRARA1A09"
-  },
-  "공항철도:김포공항:5": {
-    "realtimeApiName": "김포공항",
-    "tagoStationId": "MTRARA1A05"
   },
   "공항철도:디지털미디어시티:4": {
     "realtimeApiName": "디지털미디어시티",
@@ -30,26 +14,6 @@
   "공항철도:서울역:1": {
     "realtimeApiName": "서울",
     "tagoStationId": "MTRARA1A01"
-  },
-  "공항철도:영종:9": {
-    "realtimeApiName": "영종",
-    "tagoStationId": "MTRARA1A072"
-  },
-  "공항철도:운서:10": {
-    "realtimeApiName": "운서",
-    "tagoStationId": "MTRARA1A08"
-  },
-  "공항철도:인천공항1터미널:12": {
-    "realtimeApiName": "인천공항1터미널",
-    "tagoStationId": "MTRARA1A10"
-  },
-  "공항철도:인천공항2터미널:13": {
-    "realtimeApiName": "인천공항2터미널",
-    "tagoStationId": "MTRARA1A11"
-  },
-  "공항철도:청라국제도시:8": {
-    "realtimeApiName": "청라국제도시",
-    "tagoStationId": "MTRARA1A071"
   },
   "신분당선:강남:1": {
     "realtimeApiName": "강남",
@@ -307,93 +271,6 @@
     "realtimeApiName": "춘의",
     "tagoStationId": "MTRIC7753"
   },
-  "인천1호선:귤현:2": {
-    "tagoStationId": "MTRICI1111"
-  },
-  "인천1호선:박촌:3": {
-    "tagoStationId": "MTRICI1112"
-  },
-  "인천1호선:임학:4": {
-    "tagoStationId": "MTRICI1113"
-  },
-  "인천1호선:계양:1": {
-    "tagoStationId": "MTRICI1110"
-  },
-  "인천1호선:계산:5": {
-    "tagoStationId": "MTRICI1114"
-  },
-  "인천1호선:경인교대입구:6": {
-    "tagoStationId": "MTRICI1115"
-  },
-  "인천1호선:작전:7": {
-    "tagoStationId": "MTRICI1116"
-  },
-  "인천1호선:갈산:8": {
-    "tagoStationId": "MTRICI1117"
-  },
-  "인천1호선:부평구청:9": {
-    "tagoStationId": "MTRICI1118"
-  },
-  "인천1호선:부평시장:10": {
-    "tagoStationId": "MTRICI1119"
-  },
-  "인천1호선:부평:11": {
-    "tagoStationId": "MTRICI1118"
-  },
-  "인천1호선:동수:12": {
-    "tagoStationId": "MTRICI1121"
-  },
-  "인천1호선:부평삼거리:13": {
-    "tagoStationId": "MTRICI1122"
-  },
-  "인천1호선:간석오거리:14": {
-    "tagoStationId": "MTRICI1123"
-  },
-  "인천1호선:인천시청:15": {
-    "tagoStationId": "MTRICI1124"
-  },
-  "인천1호선:예술회관:16": {
-    "tagoStationId": "MTRICI1125"
-  },
-  "인천1호선:인천터미널:17": {
-    "tagoStationId": "MTRICI1126"
-  },
-  "인천1호선:문학경기장:18": {
-    "tagoStationId": "MTRICI1127"
-  },
-  "인천1호선:선학:19": {
-    "tagoStationId": "MTRICI1128"
-  },
-  "인천1호선:신연수:20": {
-    "tagoStationId": "MTRICI1129"
-  },
-  "인천1호선:원인재:21": {
-    "tagoStationId": "MTRICI1130"
-  },
-  "인천1호선:동춘:22": {
-    "tagoStationId": "MTRICI1131"
-  },
-  "인천1호선:동막:23": {
-    "tagoStationId": "MTRICI1132"
-  },
-  "인천1호선:캠퍼스타운:24": {
-    "tagoStationId": "MTRICI1133"
-  },
-  "인천1호선:테크노파크:25": {
-    "tagoStationId": "MTRICI1134"
-  },
-  "인천1호선:지식정보단지:26": {
-    "tagoStationId": "MTRICI1135"
-  },
-  "인천1호선:인천대입구:27": {
-    "tagoStationId": "MTRICI1136"
-  },
-  "인천1호선:센트럴파크:28": {
-    "tagoStationId": "MTRICI1137"
-  },
-  "인천1호선:국제업무지구:29": {
-    "tagoStationId": "MTRICI1138"
-  },
   "인천2호선:검단오류:1": {
     "tagoStationId": "MTRICI2201"
   },
@@ -456,9 +333,6 @@
   },
   "인천2호선:인천시청:21": {
     "tagoStationId": "MTRICI2221"
-  },
-  "인천1호선:송도달빛축제공원:30": {
-    "tagoStationId": "MTRICI1139"
   },
   "7호선:굴포천:50": {
     "realtimeApiName": "굴포천",
@@ -1399,10 +1273,6 @@
     "realtimeApiName": "신길",
     "tagoStationId": "MTRKR1138"
   },
-  "1호선:신창(순천향대):77": {
-    "realtimeApiName": "신창",
-    "tagoStationId": "MTRKR1P177"
-  },
   "경강:신둔도예촌:38": {
     "realtimeApiName": "신둔도예촌",
     "tagoStationId": "MTRKRK5K416"
@@ -1769,14 +1639,6 @@
   "1호선:아산:74": {
     "realtimeApiName": "아산",
     "tagoStationId": "MTRKR1P172"
-  },
-  "1호선:배방:75": {
-    "realtimeApiName": "배방",
-    "tagoStationId": "MTRKR1P174"
-  },
-  "1호선:온양온천:76": {
-    "realtimeApiName": "온양온천",
-    "tagoStationId": "MTRKR1P176"
   },
   "경강:성남:22": {
     "realtimeApiName": "성남",
@@ -3275,5 +3137,160 @@
   "우이신설:4.19민주묘지:3": {
     "realtimeApiName": "4.19 민주묘지",
     "tagoStationId": "MTRUIUIS112"
+  },
+  "1호선:배방:76": {
+    "realtimeApiName": "배방",
+    "tagoStationId": "MTRKR1P174"
+  },
+  "1호선:온양온천:77": {
+    "realtimeApiName": "온양온천",
+    "tagoStationId": "MTRKR1P176"
+  },
+  "1호선:신창(순천향대):78": {
+    "realtimeApiName": "신창",
+    "tagoStationId": "MTRKR1P177"
+  },
+  "1호선:탕정:75": {
+    "realtimeApiName": "탕정",
+    "tagoStationId": "MTRKR1P173"
+  },
+  "공항철도:인천공항2터미널:14": {
+    "realtimeApiName": "인천공항2터미널",
+    "tagoStationId": "MTRARA1A11"
+  },
+  "공항철도:인천공항1터미널:13": {
+    "realtimeApiName": "인천공항1터미널",
+    "tagoStationId": "MTRARA1A10"
+  },
+  "공항철도:공항화물청사:12": {
+    "realtimeApiName": "공항화물청사",
+    "tagoStationId": "MTRARA1A09"
+  },
+  "공항철도:운서:11": {
+    "realtimeApiName": "운서",
+    "tagoStationId": "MTRARA1A08"
+  },
+  "공항철도:영종:10": {
+    "realtimeApiName": "영종",
+    "tagoStationId": "MTRARA1A072"
+  },
+  "공항철도:청라국제도시:9": {
+    "realtimeApiName": "청라국제도시",
+    "tagoStationId": "MTRARA1A071"
+  },
+  "공항철도:검암:8": {
+    "realtimeApiName": "검암",
+    "tagoStationId": "MTRARA1A07"
+  },
+  "공항철도:계양:7": {
+    "realtimeApiName": "계양",
+    "tagoStationId": "MTRARA1A06"
+  },
+  "공항철도:김포공항:6": {
+    "realtimeApiName": "김포공항",
+    "tagoStationId": "MTRARA1A05"
+  },
+  "공항철도:마곡나루:5": {
+    "realtimeApiName": "마곡나루",
+    "tagoStationId": "MTRARA1A042"
+  },
+  "인천1호선:송도달빛축제공원:33": {
+    "tagoStationId": "MTRICI1139"
+  },
+  "인천1호선:국제업무지구:32": {
+    "tagoStationId": "MTRICI1138"
+  },
+  "인천1호선:센트럴파크:31": {
+    "tagoStationId": "MTRICI1137"
+  },
+  "인천1호선:인천대입구:30": {
+    "tagoStationId": "MTRICI1136"
+  },
+  "인천1호선:지식정보단지:29": {
+    "tagoStationId": "MTRICI1135"
+  },
+  "인천1호선:테크노파크:28": {
+    "tagoStationId": "MTRICI1134"
+  },
+  "인천1호선:캠퍼스타운:27": {
+    "tagoStationId": "MTRICI1133"
+  },
+  "인천1호선:동막:26": {
+    "tagoStationId": "MTRICI1132"
+  },
+  "인천1호선:동춘:25": {
+    "tagoStationId": "MTRICI1131"
+  },
+  "인천1호선:원인재:24": {
+    "tagoStationId": "MTRICI1130"
+  },
+  "인천1호선:신연수:23": {
+    "tagoStationId": "MTRICI1129"
+  },
+  "인천1호선:선학:22": {
+    "tagoStationId": "MTRICI1128"
+  },
+  "인천1호선:문학경기장:21": {
+    "tagoStationId": "MTRICI1127"
+  },
+  "인천1호선:인천터미널:20": {
+    "tagoStationId": "MTRICI1126"
+  },
+  "인천1호선:예술회관:19": {
+    "tagoStationId": "MTRICI1125"
+  },
+  "인천1호선:인천시청:18": {
+    "tagoStationId": "MTRICI1124"
+  },
+  "인천1호선:간석오거리:17": {
+    "tagoStationId": "MTRICI1123"
+  },
+  "인천1호선:부평삼거리:16": {
+    "tagoStationId": "MTRICI1122"
+  },
+  "인천1호선:동수:15": {
+    "tagoStationId": "MTRICI1121"
+  },
+  "인천1호선:부평:14": {
+    "tagoStationId": "MTRICI1118"
+  },
+  "인천1호선:부평시장:13": {
+    "tagoStationId": "MTRICI1119"
+  },
+  "인천1호선:부평구청:12": {
+    "tagoStationId": "MTRICI1118"
+  },
+  "인천1호선:갈산:11": {
+    "tagoStationId": "MTRICI1117"
+  },
+  "인천1호선:작전:10": {
+    "tagoStationId": "MTRICI1116"
+  },
+  "인천1호선:경인교대입구:9": {
+    "tagoStationId": "MTRICI1115"
+  },
+  "인천1호선:계산:8": {
+    "tagoStationId": "MTRICI1114"
+  },
+  "인천1호선:임학:7": {
+    "tagoStationId": "MTRICI1113"
+  },
+  "인천1호선:박촌:6": {
+    "tagoStationId": "MTRICI1112"
+  },
+  "인천1호선:귤현:5": {
+    "tagoStationId": "MTRICI1111"
+  },
+  "인천1호선:계양:4": {
+    "tagoStationId": "MTRICI1110"
+  },
+  "인천1호선:검단호수공원:1": {
+    "tagoStationId": "MTRICI1107"
+  },
+  "인천1호선:신검단중앙:2": {
+    "tagoStationId": "MTRICI1108"
+  },
+  "인천1호선:아라:3": {
+    "tagoStationId": "MTRICI1109"
   }
 }

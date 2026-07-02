@@ -70,7 +70,10 @@ function NeighborLink({
   if (candidates.length === 0) return null
 
   const isMulti = candidates.length > 1
-  const displayText = isMulti ? candidates.join(' / ') : candidates[0]
+  const strip = (n: string) => n.replace(/\(.+?\)/g, '').trim()
+  const displayText = isMulti
+    ? candidates.map(strip).join(' / ')
+    : strip(candidates[0])
 
   return (
     <div
@@ -105,7 +108,7 @@ function NeighborLink({
                 onNavigate(name)
               }}
             >
-              {name}
+              {strip(name)}
             </button>
           ))}
         </div>

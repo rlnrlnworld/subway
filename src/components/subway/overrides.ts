@@ -117,6 +117,7 @@ export const DOT_POS_OVERRIDE: Record<string, { x?: number; y?: number }> = {
   '소사': { x: 281, y: 648 },
   '온수': { y: 604 },
   '보라매': { x: 524 },
+  '마곡나루': { x: 272, y: 370 },
 }
 
 // ─────────────────────────────────────────────────────────
@@ -179,6 +180,7 @@ export const BADGE_SIDE: Record<string, Side> = {
   '광명': 'left',
   '관악산(서울대)': 'right',
   '계양': 'top',
+  '검단호수공원': 'top',
   '양촌': 'bottom',
   '신내': 'top',
   '발곡': 'top',
@@ -194,6 +196,7 @@ export const BADGE_NUDGE: Record<string, { dx?: number; dy?: number }> = {
   '오금': { dx: 6 },
   '모란': { dx: 0, dy: 14 },
   '계양': { dx: -4 },
+  '검단호수공원': { dx: -4, dy: 4 },
 }
 
 export const BADGE_NUDGE_BY_ID: Record<string, { dx?: number; dy?: number }> = {}
@@ -202,6 +205,12 @@ export const BADGE_NUDGE_BY_ID: Record<string, { dx?: number; dy?: number }> = {
 // 라벨 방향/오프셋
 // ─────────────────────────────────────────────────────────
 export const LABEL_DIR: Record<string, LabelDir> = {
+  '신방화': 'right',
+  '마곡나루': 'right',
+  '양천향교': 'right',
+  '아라': 'left',
+  '신검단중앙': 'left',
+  '검단호수공원': 'left',
   '부평구청': 'right',
   '독정': 'right',
   '삼산체육관': 'left',
@@ -410,6 +419,7 @@ export const LABEL_WRAP: Record<string, string[]> = {
 export const LABEL_OFFSET: Record<string, { dx?: number; dy?: number }> = {
   '김포공항': { dx: 14, dy: 14 },
   '공항시장': { dx: 4 },
+  '마곡나루': { dx: 4 },
   '부천종합운동장': { dy: 8 },
   '당산': { dx: -2, dy: -8 },
   '여의도': { dx: 4 },
