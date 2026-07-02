@@ -2,11 +2,71 @@ import { NextRequest, NextResponse } from 'next/server'
 import apiMap from '@/data/station-api-map.json'
 import type { Arrival, ArrivalsResponse } from '@/types/arrivals'
 
-type ApiMapEntry = { realtimeApiName?: string; tagoStationId?: string }
+// ─────────────────────────────────────────
+// 정적 시간표 파일 import (build 시점 bundle)
+// - 1~9호선: Seoul API 소스, key=stationCd (4-digit)
+// - 나머지: TAGO 소스 (일부는 seoulmetro HTML 보충), key=tagoStationId
+// ─────────────────────────────────────────
+import tt_1 from '@/data/timetables/1호선.json'
+import tt_2 from '@/data/timetables/2호선.json'
+import tt_3 from '@/data/timetables/3호선.json'
+import tt_4 from '@/data/timetables/4호선.json'
+import tt_5 from '@/data/timetables/5호선.json'
+import tt_6 from '@/data/timetables/6호선.json'
+import tt_7 from '@/data/timetables/7호선.json'
+import tt_8 from '@/data/timetables/8호선.json'
+import tt_9 from '@/data/timetables/9호선.json'
+import tt_gtxa from '@/data/timetables/GTX-A.json'
+import tt_gk from '@/data/timetables/경강.json'
+import tt_kj from '@/data/timetables/경의중앙.json'
+import tt_kc from '@/data/timetables/경춘.json'
+import tt_air from '@/data/timetables/공항철도.json'
+import tt_kg from '@/data/timetables/김포골드라인.json'
+import tt_sh from '@/data/timetables/서해.json'
+import tt_sb from '@/data/timetables/수인분당.json'
+import tt_sl from '@/data/timetables/신림선.json'
+import tt_sbd from '@/data/timetables/신분당선.json'
+import tt_yi from '@/data/timetables/용인경전철.json'
+import tt_ui from '@/data/timetables/우이신설.json'
+import tt_ej from '@/data/timetables/의정부경전철.json'
+import tt_ic1 from '@/data/timetables/인천1호선.json'
+import tt_ic2 from '@/data/timetables/인천2호선.json'
+
+type TimetableItem = { d: string; e: string }
+type StationTimetable = Record<'01' | '02' | '03', Record<'U' | 'D', TimetableItem[]>>
+type LineTimetable = Record<string, StationTimetable>
+
+const TIMETABLES: Record<string, LineTimetable> = {
+  '1호선': tt_1 as unknown as LineTimetable,
+  '2호선': tt_2 as unknown as LineTimetable,
+  '3호선': tt_3 as unknown as LineTimetable,
+  '4호선': tt_4 as unknown as LineTimetable,
+  '5호선': tt_5 as unknown as LineTimetable,
+  '6호선': tt_6 as unknown as LineTimetable,
+  '7호선': tt_7 as unknown as LineTimetable,
+  '8호선': tt_8 as unknown as LineTimetable,
+  '9호선': tt_9 as unknown as LineTimetable,
+  'GTX-A': tt_gtxa as unknown as LineTimetable,
+  '경강': tt_gk as unknown as LineTimetable,
+  '경의중앙': tt_kj as unknown as LineTimetable,
+  '경춘': tt_kc as unknown as LineTimetable,
+  '공항철도': tt_air as unknown as LineTimetable,
+  '김포골드라인': tt_kg as unknown as LineTimetable,
+  '서해': tt_sh as unknown as LineTimetable,
+  '수인분당': tt_sb as unknown as LineTimetable,
+  '신림선': tt_sl as unknown as LineTimetable,
+  '신분당선': tt_sbd as unknown as LineTimetable,
+  '용인경전철': tt_yi as unknown as LineTimetable,
+  '우이신설': tt_ui as unknown as LineTimetable,
+  '의정부경전철': tt_ej as unknown as LineTimetable,
+  '인천1호선': tt_ic1 as unknown as LineTimetable,
+  '인천2호선': tt_ic2 as unknown as LineTimetable,
+}
+
+type ApiMapEntry = { realtimeApiName?: string; tagoStationId?: string; stationCd?: string }
 const MAP = apiMap as Record<string, ApiMapEntry>
 
 const REALTIME_BASE = 'http://swopenapi.seoul.go.kr/api/subway'
-const TAGO_BASE = 'https://apis.data.go.kr/1613000/SubwayInfo'
 
 const SUBWAY_ID_TO_LOCAL_LINE: Record<string, string> = {
   '1001': '1호선', '1002': '2호선', '1003': '3호선', '1004': '4호선',
@@ -60,6 +120,15 @@ function padTime(t: string): string {
   return `${t.slice(0, 2)}:${t.slice(2, 4)}`
 }
 
+function timeToSec(hhmmss: string): number | null {
+  if (!hhmmss || hhmmss.length < 4) return null
+  const h = parseInt(hhmmss.slice(0, 2), 10)
+  const m = parseInt(hhmmss.slice(2, 4), 10)
+  const s = hhmmss.length >= 6 ? parseInt(hhmmss.slice(4, 6), 10) : 0
+  if (isNaN(h) || isNaN(m)) return null
+  return h * 3600 + m * 60 + s
+}
+
 // ─────────────────────────────────────────
 // Realtime API
 // ─────────────────────────────────────────
@@ -89,7 +158,6 @@ async function fetchRealtime(statnNm: string, key: string): Promise<{ items: Rea
     const data = await res.json()
     const em = data?.errorMessage
     if (em?.code && em.code !== 'INFO-000') {
-      // 데이터 없음(빈 응답)은 정상 케이스로 취급 (첫차 이전 등)
       if (em.code !== 'INFO-200') console.error(`[arrivals] realtime ${em.code}: ${em.message}`)
       return { items: [] }
     }
@@ -103,91 +171,58 @@ async function fetchRealtime(statnNm: string, key: string): Promise<{ items: Rea
 
 function realtimeToIso(recptnDt: string): string | undefined {
   if (!recptnDt) return undefined
-  // "2026-07-01 09:49:41" → ISO
   const [d, t] = recptnDt.split(' ')
   if (!d || !t) return undefined
   return `${d}T${t}+09:00`
 }
 
 // ─────────────────────────────────────────
-// TAGO Timetable
+// Static Timetable Lookup
 // ─────────────────────────────────────────
 
-type TagoItem = {
-  endSubwayStationNm: string
-  depTime: string
-  arrTime: string
-  upDownTypeCode: string
+/**
+ * 노선 + station lookup key (stationCd 우선, 없으면 tagoStationId) → 정적 시간표
+ * 1~9호선은 stationCd 사용, 그 외는 tagoStationId 사용.
+ */
+function lookupTimetable(line: string, entry: ApiMapEntry): StationTimetable | null {
+  const lineData = TIMETABLES[line]
+  if (!lineData) return null
+  const key = entry.stationCd ?? entry.tagoStationId
+  if (!key) return null
+  return lineData[key] ?? null
 }
 
-function timeToSec(hhmmss: string): number | null {
-  if (!hhmmss || hhmmss.length < 4) return null
-  const h = parseInt(hhmmss.slice(0, 2), 10)
-  const m = parseInt(hhmmss.slice(2, 4), 10)
-  const s = hhmmss.length >= 6 ? parseInt(hhmmss.slice(4, 6), 10) : 0
-  if (isNaN(h) || isNaN(m)) return null
-  return h * 3600 + m * 60 + s
-}
-
-async function fetchTagoTimetable(stationId: string, dir: 'U' | 'D', dailyCode: string, key: string): Promise<TagoItem[]> {
-  const params = new URLSearchParams({
-    serviceKey: key,
-    subwayStationId: stationId,
-    dailyTypeCode: dailyCode,
-    upDownTypeCode: dir,
-    _type: 'json',
-    numOfRows: '400',
-    pageNo: '1',
-  })
-  try {
-    const res = await fetch(`${TAGO_BASE}/GetSubwaySttnAcctoSchdulList?${params}`, {
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) {
-      console.error(`[arrivals] tago HTTP ${res.status} for ${stationId}/${dir}`)
-      return []
-    }
-    const data = await res.json()
-    const items = data?.response?.body?.items?.item
-    if (!items) return []
-    return Array.isArray(items) ? items : [items]
-  } catch (e) {
-    console.error(`[arrivals] tago fetch fail ${stationId}/${dir}:`, e)
-    return []
-  }
-}
-
-async function tagoNextArrivals(
-  entry: { tagoStationId: string; line: string },
-  dailyCode: string,
+/**
+ * 정적 timetable에서 다음 열차 pick.
+ * 02(토) 데이터 없으면 03(휴일)로 fallback — TAGO 코레일 광역철도 특성.
+ */
+function pickNextFromStatic(
+  timetable: StationTimetable,
+  line: string,
+  dailyCode: '01' | '02' | '03',
   nowSec: number,
-  key: string,
-): Promise<Arrival[]> {
-  const [up, down] = await Promise.all([
-    fetchTagoTimetable(entry.tagoStationId, 'U', dailyCode, key),
-    fetchTagoTimetable(entry.tagoStationId, 'D', dailyCode, key),
-  ])
-
-  const pickNext = (items: TagoItem[], dirLabel: string): Arrival[] => {
+): Arrival[] {
+  const pick = (dir: 'U' | 'D', dirLabel: string): Arrival[] => {
+    let items = timetable[dailyCode][dir]
+    if (items.length === 0 && dailyCode === '02') items = timetable['03'][dir]
     return items
       .map(it => {
-        const t = timeToSec(it.depTime)
+        const t = timeToSec(it.d)
         return t !== null ? { it, t } : null
       })
-      .filter((x): x is { it: TagoItem; t: number } => !!x && x.t >= nowSec)
+      .filter((x): x is { it: TimetableItem; t: number } => !!x && x.t >= nowSec)
       .sort((a, b) => a.t - b.t)
       .slice(0, 2)
       .map(({ it, t }) => ({
-        line: entry.line,
+        line,
         dir: dirLabel,
-        dest: it.endSubwayStationNm,
+        dest: it.e,
         sec: t - nowSec,
-        msg: `${padTime(it.depTime)} 출발 예정`,
+        msg: `${padTime(it.d)} 출발 예정`,
         source: 'timetable' as const,
       }))
   }
-
-  return [...pickNext(up, '상행'), ...pickNext(down, '하행')]
+  return [...pick('U', '상행'), ...pick('D', '하행')]
 }
 
 // ─────────────────────────────────────────
@@ -211,7 +246,6 @@ export async function GET(req: NextRequest) {
   if (ids.length === 0) return NextResponse.json({ error: 'no valid ids' }, { status: 400 })
 
   const realtimeKey = process.env.SEOUL_REALTIME_API_KEY
-  const tagoKey = process.env.TAGO_API_KEY
   const kst = kstNow()
   const dailyCode = todayCode(kst.day)
 
@@ -221,7 +255,7 @@ export async function GET(req: NextRequest) {
     return { id, line, entry }
   })
 
-  // Realtime: statnNm dedup
+  // Realtime fetch (statnNm dedup)
   const rtNames = new Set<string>()
   const rtLinesRequested = new Set<string>()
   for (const t of targets) {
@@ -240,13 +274,7 @@ export async function GET(req: NextRequest) {
     ? Promise.all(Array.from(rtNames).map(name => fetchRealtime(name, realtimeKey)))
     : Promise.resolve([])
 
-  const tagoTargets = targets.filter(t => t.entry?.tagoStationId)
-  const tagoPromise = tagoKey && tagoTargets.length > 0
-    ? Promise.all(tagoTargets.map(t =>
-        tagoNextArrivals({ tagoStationId: t.entry!.tagoStationId!, line: t.line }, dailyCode, kst.secOfDay, tagoKey)))
-    : Promise.resolve([])
-
-  const [rtResults, tagoResults] = await Promise.all([rtPromise, tagoPromise])
+  const rtResults = await rtPromise
 
   for (const r of rtResults) {
     if (!generatedAt && r.recptnDt) generatedAt = realtimeToIso(r.recptnDt)
@@ -267,9 +295,16 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  for (const a of tagoResults.flat()) {
-    arrivals.push(a)
-    timetableCount++
+  // 정적 시간표 lookup (동기 처리 — 파일 로드는 module scope에서 이미 완료)
+  for (const t of targets) {
+    if (!t.entry) continue
+    const timetable = lookupTimetable(t.line, t.entry)
+    if (!timetable) continue
+    const staticArrivals = pickNextFromStatic(timetable, t.line, dailyCode, kst.secOfDay)
+    for (const a of staticArrivals) {
+      arrivals.push(a)
+      timetableCount++
+    }
   }
 
   arrivals.sort(sortArrivals)
@@ -280,7 +315,7 @@ export async function GET(req: NextRequest) {
     : timetableCount > 0 ? 'timetable'
     : 'none'
 
-  const noMapping = targets.every(t => !t.entry || (!t.entry.realtimeApiName && !t.entry.tagoStationId))
+  const noMapping = targets.every(t => !t.entry || (!t.entry.realtimeApiName && !t.entry.tagoStationId && !t.entry.stationCd))
   const warning = noMapping ? '해당 역은 정보 제공 대상이 아닙니다.' : undefined
 
   const body: ArrivalsResponse = { source, arrivals, generatedAt: generatedAt ?? kst.iso, warning }

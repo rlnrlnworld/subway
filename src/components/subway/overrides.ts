@@ -314,6 +314,7 @@ export const LABEL_DIR: Record<string, LabelDir> = {
   '마들': 'right',
   '불암산': 'right',
   '진접': 'left',
+  '별내별가람': 'right',
   '태릉입구': 'left',
   '도봉산': 'left',
   '봉화산(서울의료원)': 'left',
