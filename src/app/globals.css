@@ -499,3 +499,114 @@ body {
   font-variant-numeric: tabular-nums;
   font-size: 14px;
 }
+
+/* ─── Station Search ─────────────────────────────────────── */
+.station-search-wrap {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  width: min(360px, calc(100vw - 32px));
+  font-family: inherit;
+}
+.station-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease-out, border-color 0.15s ease-out;
+}
+.station-search-box:focus-within {
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.14);
+}
+.station-search-icon {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.station-search-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+}
+.station-search-box input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+.station-search-clear {
+  border: 0;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color 0.12s ease-out;
+}
+.station-search-clear:hover {
+  color: #111;
+}
+.station-search-list {
+  margin: 6px 0 0;
+  padding: 6px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  max-height: 320px;
+  overflow-y: auto;
+}
+.station-search-empty {
+  padding: 12px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+.station-search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #111;
+  transition: background 0.1s ease-out;
+}
+.station-search-item.is-active,
+.station-search-item:hover {
+  background: #f3f4f6;
+}
+.station-search-name {
+  font-weight: 600;
+}
+.station-search-lines {
+  display: inline-flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.station-search-line-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+@media (max-width: 640px) {
+  .station-search-wrap {
+    top: 12px;
+    width: calc(100vw - 24px);
+  }
+}

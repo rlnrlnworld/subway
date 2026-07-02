@@ -169,6 +169,15 @@ async function fetchRealtime(statnNm: string, key: string): Promise<{ items: Rea
   }
 }
 
+const ARVL_CD_MSG: Record<string, string> = {
+  '0': '진입',
+  '1': '도착',
+  '2': '출발',
+  '3': '전역출발',
+  '4': '전역진입',
+  '5': '전역도착',
+}
+
 function realtimeToIso(recptnDt: string): string | undefined {
   if (!recptnDt) return undefined
   const [d, t] = recptnDt.split(' ')
@@ -286,7 +295,7 @@ export async function GET(req: NextRequest) {
         dir: it.updnLine || '',
         dest: it.bstatnNm,
         sec: parseInt(it.barvlDt, 10) || 0,
-        msg: it.arvlMsg2 || '',
+        msg: ARVL_CD_MSG[it.arvlCd] || '',
         trainType: it.btrainSttus || undefined,
         isLast: it.lstcarAt === '1',
         source: 'realtime',

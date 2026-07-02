@@ -149,7 +149,9 @@ function formatRefreshedAt(ts: number | null): string {
 function ArrivalItem({ arrival, elapsedSec }: { arrival: Arrival; elapsedSec: number }) {
   const adjusted =
     arrival.sec == null ? null : Math.max(0, arrival.sec - elapsedSec)
-  const secText = formatSec(adjusted)
+  const useMsg =
+    arrival.source === 'realtime' && adjusted === 0 && !!arrival.msg
+  const secText = useMsg ? arrival.msg : formatSec(adjusted)
   const showExpress = arrival.trainType && arrival.trainType !== '일반'
 
   return (
@@ -200,8 +202,8 @@ function ArrivalsList({
     return {
       upLabel,
       downLabel,
-      upList: up.slice(0, 2),
-      downList: down.slice(0, 2),
+      upList: up.slice(0, 4),
+      downList: down.slice(0, 4),
     }
   }, [arrivals])
 
@@ -339,11 +341,15 @@ function ArrivalsBody({
             <div className="station-panel-arrivals-list">
               <div className="station-panel-arrivals-skeleton-item" />
               <div className="station-panel-arrivals-skeleton-item" />
+              <div className="station-panel-arrivals-skeleton-item" />
+              <div className="station-panel-arrivals-skeleton-item" />
             </div>
           </section>
           <section className="station-panel-arrivals-section">
             <h3 className="station-panel-arrivals-section-title">하행</h3>
             <div className="station-panel-arrivals-list">
+              <div className="station-panel-arrivals-skeleton-item" />
+              <div className="station-panel-arrivals-skeleton-item" />
               <div className="station-panel-arrivals-skeleton-item" />
               <div className="station-panel-arrivals-skeleton-item" />
             </div>

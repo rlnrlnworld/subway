@@ -6,6 +6,7 @@ import { InvertedWheelZoom } from './InvertedWheelZoom'
 import { MapSvg } from './MapSvg'
 import { Minimap } from './Minimap'
 import { StationDetailPanel } from './StationDetailPanel'
+import { StationSearch } from './StationSearch'
 import { dotGroupsByKey, viewBox } from './data'
 import { FOCUS_ANIM_MS, FOCUS_SCALE, PANEL_RIGHT_MARGIN_PX, PANEL_VW } from './config'
 import { useMapStore } from '@/store/mapStore'
@@ -97,6 +98,7 @@ export function MapContent({ containerRef }: Props) {
           <MapSvg onClick={handleClick} />
         </TransformComponent>
       </InvertedWheelZoom>
+      <StationSearch />
       <Minimap />
       {selectedDot && <DotTooltip containerRef={containerRef} />}
       <StationDetailPanel />
